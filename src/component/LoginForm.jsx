@@ -1,5 +1,6 @@
 'use client';
 import { authClient } from '@/lib/auth-client';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { Form, TextField, Label, Input, Button } from 'react-aria-components';
@@ -43,10 +44,10 @@ if(authError){
   const textInputClass = "w-full h-11 px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all";
 
   return (
-    // PARENT CONTAINER: This centers the child content
+
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 p-4">
       
-      {/* FORM WRAPPER */}
+     
       <div className="w-full max-w-md rounded-2xl border border-zinc-100 bg-white p-8 shadow-xl relative overflow-hidden">
         {/* Decorative Top Line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent" />
@@ -93,6 +94,14 @@ if(authError){
           <Button type="submit" className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl h-12 transition-all shadow-md shadow-red-500/20">
             Sign In
           </Button>
+  {/* Navigation Option */}
+                    <div className="text-center pt-4 border-t border-zinc-100 dark:border-zinc-800 mt-2 text-sm text-black dark:text-zinc-400">
+                        New to Blood Donation?{" "}
+                        <Link href={`/registration`} className="font-medium cursor-pointer text-sm text-red-600 ">
+                            Create an account
+                        </Link>
+                    </div>
+
         </Form>
       </div>
     </div>

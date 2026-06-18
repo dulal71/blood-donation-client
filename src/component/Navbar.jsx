@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { FaUser, FaThLarge, FaBars, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import Logo from "./Logo";
+import { useSession } from "@/lib/auth-client";
+import LogoutButton from "./LogoutButton";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -13,15 +15,11 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false); // ডেস্কটপ ড্রপডাউনের স্টেট
   const dropdownRef = useRef(null);
+const {data :session}=useSession()
+const user = session?.user
+  console.log(user);
 
-  const user = {
-    name: "Dulal Ahmed",
-    image: "https://tse3.mm.bing.net/th/id/OIP.3gi5FJv4ed37PLYp_4wlkwHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
-    role: "Donor",
-    email: "dulal@example.com"
-  };
-
-  const isLoggedIn = user ? false : false;
+  const isLoggedIn = user ? true : false;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -99,7 +97,7 @@ export default function Navbar() {
                     </div>
 
                     <Link
-                      href="/dashboard/organizer"
+                      href="/dashboard"
                       onClick={() => setDesktopDropdownOpen(false)}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition"
                     >
@@ -107,14 +105,7 @@ export default function Navbar() {
                       <span>My Dashboard</span>
                     </Link>
 
-                    <Link
-                      href={`/dashboard/${user?.role?.toLowerCase()}`}
-                      onClick={() => setDesktopDropdownOpen(false)}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition"
-                    >
-                      <FaUser className="text-gray-400 text-sm shrink-0" />
-                      <span>Profile Settings</span>
-                    </Link>
+                    <LogoutButton></LogoutButton>
                   </div>
                 )}
               </div>

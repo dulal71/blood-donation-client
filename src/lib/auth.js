@@ -17,6 +17,7 @@ export const auth = betterAuth({
   user:{
     additionalFields:{
     role:{type: "string", default:"donor"},
+    status:{type: "string", default:"active"},
      phone:{ type: "string", required: false } ,
     bloodGroup: { type: "string", required: false },
    district: { type: "string", required: false },

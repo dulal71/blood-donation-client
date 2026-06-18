@@ -29,6 +29,8 @@ import {
 import { districtsData, upazilasData } from "@/data/geoData";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
+import Logo from "./Logo";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 
@@ -58,7 +60,9 @@ export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
- 
+ const router = useRouter()
+ const searchParams=useSearchParams()
+ const redirectTo=searchParams.get('redirect') || "/"
 
   const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -128,7 +132,7 @@ export default function RegistrationForm() {
     if (!formData.bloodGroup) newErrors.bloodGroup = "Blood group is required";
     if (!formData.district) newErrors.district = "District is required";
     if (!formData.upazila) newErrors.upazila = "Upazila is required";
-    if (!logoUrl) newErrors.logo = "Company logo is required"; // লোগো লিঙ্ক চেক
+    if (!logoUrl) newErrors.logo = "Profile image is required"; // লোগো লিঙ্ক চেক
     
     if (formData.password !== formData.confirm_password) {
       newErrors.confirm_password = "Passwords do not match!";
@@ -148,22 +152,27 @@ export default function RegistrationForm() {
 
     const finalSubmittedData = {
       ...formData,
+      role:"donor",
+      status:"active",
       district: selectedDistrictObj ? selectedDistrictObj.name : "",
       upazila: selectedUpazilaObj ? selectedUpazilaObj.name : "",
       image: logoUrl 
     };
     setErrors({});
+    console.log(finalSubmittedData);
     try{
 const { data, error } = await authClient.signUp.email({
- ...finalSubmittedData
+ ...finalSubmittedData,
+ 
     })
     if(error){
       alert(error.message || "Something went wrong!");
     }else{
-      console.log("Registration successful:");
+      alert("Registration successful:");
+      router.push(redirectTo)
     }
     }catch(error){
-console.error("Unexpected error:", err);
+console.error("Unexpected error:", error);
     }finally{
 
     }
@@ -177,25 +186,33 @@ console.error("Unexpected error:", err);
         
         <Card.Content className="space-y-3">
           {/* form header */}
-          <div className="text-center sm:text-left pb-2">
-            <h2 className="text-2xl font-bold text-zinc-900 tracking-tight sm:text-3xl">
+         
+          <div  className="flex justify-between items-center">
+            <div className="">
+             <h2 className="text-2xl font-bold text-zinc-900 tracking-tight sm:text-3xl">
               Create an Account
             </h2>
             <p className="text-sm text-zinc-500 mt-1.5">
               Join our blood donation community today
             </p>
+            </div>
+            <div>
+              <Logo></Logo>
+            </div>
           </div>
+
+
  {/* main form */}
           <Form onSubmit={handleSubmit} className="space-y-2" validationErrors={errors} validationBehavior="aria">
             <Fieldset className="space-y-5 w-full">
               
               {/* NEW IMAGE UPLOAD FLOW */}
              <div className="flex flex-col items-center justify-center w-full pb-4 border-b border-zinc-100">
-  <span className="text-zinc-500 font-semibold text-xs tracking-wide uppercase mb-3 self-start sm:self-center">
-    Profile Image
-  </span>
+          <span className="text-zinc-500 font-semibold text-xs tracking-wide uppercase mb-3 self-start sm:self-center">
+            Profile Image
+          </span>
   
-  <div className="flex flex-col items-center text-center gap-3">
+      <div className="flex flex-col items-center text-center gap-3">
     <label className="w-20 h-20 border-2 border-dashed border-zinc-300 hover:border-red-400 bg-zinc-50/50 rounded-full flex flex-col items-center justify-center cursor-pointer transition-colors group relative overflow-hidden shadow-sm">
       <input 
         type="file" 
@@ -256,32 +273,26 @@ console.error("Unexpected error:", err);
                   </div>
                   {errors.phone && <FieldError className="text-xs text-red-500 font-medium mt-1">{errors.phone}</FieldError>}
                 </TextField>
-                <div className="w-full">
-                <Select 
-                  className={selectBoxClass} 
-                  name="bloodGroup" 
-                  selectedKeys={formData.bloodGroup ? [formData.bloodGroup] : []}
-                  onSelectionChange={(keys) => handleSelectChange("bloodGroup", Array.from(keys)[0])}
-                >
-                  <Label className="text-zinc-500 font-semibold text-xs tracking-wide uppercase">Blood Group</Label>
-                  <Select.Trigger className={triggerClasses}>
-                    <div className="flex items-center gap-2">
-                      <FaTint size={13} className="text-red-500" />
-                      <Select.Value className="text-zinc-700" />
-                    </div>
-                    <Select.Indicator><FaChevronDown size={12} className="text-zinc-400" /></Select.Indicator>
-                  </Select.Trigger>
-                  <Select.Popover className={popoverClasses}>
-                    <ListBox className="outline-none">
-                      {bloodGroups.map((group) => (
-                        <ListBox.Item key={group} id={group} className={listItemClasses} textValue={group}>
-                          {group}
-                        </ListBox.Item>
-                      ))}
-                    </ListBox>
-                  </Select.Popover>
-                </Select>
-              </div>
+                <div className={selectBoxClass}>
+  <div className="flex flex-col gap-1.5 w-full">
+  <label className="text-zinc-500 font-semibold text-xs tracking-wide uppercase">Blood Group</label>
+  <div className="relative flex items-center "> 
+    <FaTint size={13} className="absolute left-3 text-red-500 pointer-events-none z-10" />
+    <select
+      name="bloodGroup"
+      value={formData.bloodGroup}
+      onChange={(e) => setFormData((prev) => ({ ...prev, bloodGroup: e.target.value }))}
+      className={`${textInputClass} pl-10 appearance-none w-full h-full`} // textInputClass ব্যবহার করা হয়েছে
+    >
+      <option value="" disabled>Select Blood Group</option>
+      {bloodGroups.map((group) => (
+        <option key={group} value={group}>{group}</option>
+      ))}
+    </select>
+    <FaChevronDown size={12} className="absolute right-3 text-zinc-400 pointer-events-none" />
+  </div>
+</div>
+</div>
       </div>         
    {/* district   and upazila        */}
 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
