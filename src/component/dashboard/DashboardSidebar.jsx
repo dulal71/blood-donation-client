@@ -15,7 +15,7 @@ import LogoutButton from "../LogoutButton";
 
 
 const DashboardSidebar =async ({user}) => {
-  
+  console.log(user);
 const adminLinks = [
   { icon: LuLayoutDashboard, href: "/dashboard", label: "Admin Overview" },
     { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
@@ -30,7 +30,7 @@ const donorLinks = [
   { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
   { icon: LuCalendarDays, href: "/dashboard/my-donation-requests", label: "My Donation Requests" },
   { icon: LuCirclePlus, href: "/dashboard/create-donation-request", label: "Create Donation Request" },
-    { icon: FiClipboard, href: "/dashboard/all-blood-donation-request", label: "All Donation Requests" },
+
 ];
 
 const volunteerLinks = [

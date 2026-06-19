@@ -5,7 +5,7 @@ import { getSession } from '@/lib/api/userSession';
 
 const DashboardLayout =async ({ children }) => {
      const user = await getSession()
-     console.log(user);
+   
   return (
     <div className="flex flex-col min-h-screen">
      {/* dashboard header */}
@@ -25,7 +25,7 @@ const DashboardLayout =async ({ children }) => {
 
     
       <div className="flex  flex-col lg:flex-row min-h-screen">
-            <DashboardSidebar></DashboardSidebar>
+            <DashboardSidebar user={user}></DashboardSidebar>
            <div className="flex-1 p-5">{children}</div> 
         </div>
     </div>

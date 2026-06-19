@@ -17,7 +17,7 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
 const {data :session}=useSession()
 const user = session?.user
-  console.log(user);
+  
 
   const isLoggedIn = user ? true : false;
 

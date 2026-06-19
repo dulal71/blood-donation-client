@@ -102,7 +102,7 @@ function FormSelect({ label, icon: Icon, name, value, onChange, options, placeho
 export default function CreateDonationRequest() {
   const { data: session } = useSession();
   const user = session?.user;
-console.log(user);
+
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
