@@ -18,20 +18,26 @@ const DashboardSidebar =async ({user}) => {
   
 const adminLinks = [
   { icon: LuLayoutDashboard, href: "/dashboard", label: "Admin Overview" },
+    { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
+      { icon: LuCalendarDays, href: "/dashboard/my-donation-requests", label: "My Donation Requests" },
+      { icon: LuCirclePlus, href: "/dashboard/create-donation-request", label: "Create Donation Request" },
   { icon: FiUsers, href: "/dashboard/all-users", label: "All Users" },
   { icon: FiClipboard, href: "/dashboard/all-blood-donation-request", label: "All Donation Requests" },
 ];
 
 const donorLinks = [
   { icon: LuLayoutDashboard, href: "/dashboard", label: "Overview" },
-  { icon: LuUser, href: "/dashboard/donor/profile", label: "Profile" },
+  { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
   { icon: LuCalendarDays, href: "/dashboard/my-donation-requests", label: "My Donation Requests" },
   { icon: LuCirclePlus, href: "/dashboard/create-donation-request", label: "Create Donation Request" },
+    { icon: FiClipboard, href: "/dashboard/all-blood-donation-request", label: "All Donation Requests" },
 ];
 
 const volunteerLinks = [
-  { icon: LuLayoutDashboard, href: "/dashboard", label: "Volunteer Overview" },
-  { icon: FiClipboard, href: "/dashboard/all-blood-donation-request", label: "All Donation Requests" },
+ { icon: LuLayoutDashboard, href: "/dashboard", label: "Overview" },
+  { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
+  { icon: LuCalendarDays, href: "/dashboard/my-donation-requests", label: "My Donation Requests" },
+  { icon: LuCirclePlus, href: "/dashboard/create-donation-request", label: "Create Donation Request" },
 ];
 
 const userNavLinks = {

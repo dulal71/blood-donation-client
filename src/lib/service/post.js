@@ -1,0 +1,27 @@
+'use server'
+
+
+import { redirect } from "next/navigation"
+
+const baseUrl=process.env.SERVER_URL
+
+export const serverMutation=async(path, data , method = "POST")=>{
+const res = await fetch(`${baseUrl}${path}`,{
+  method:method ,
+  headers:{
+    'Content-type':'application/json'
+  } ,
+  body:JSON.stringify(data)
+})
+return handleStatusCode(res)
+}
+
+
+const handleStatusCode=(res)=>{
+if(res.status=== 401){
+    redirect('/unauthorized')
+}else if(res.status === 403){
+redirect('/forbidden')
+}
+return res.json()
+}
