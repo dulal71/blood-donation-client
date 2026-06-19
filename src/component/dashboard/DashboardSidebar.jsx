@@ -3,15 +3,15 @@
 import { LuLayoutDashboard, LuUser, LuCalendarDays, LuSettings, LuCalendar, LuHistory, LuCirclePlus, LuLogOut, LuChrome } from "react-icons/lu";
 import { MdOutlineCreditCard } from "react-icons/md";
 import { FiUsers, FiClipboard } from "react-icons/fi";
-import { IoBarChartOutline, IoMenuSharp } from "react-icons/io5";
+import {  IoMenuSharp } from "react-icons/io5";
 import {Button, Drawer} from "@heroui/react";
 
 import Link from "next/link";
-import Logo from "../Logo";
-import { ImMenu } from "react-icons/im";
+
+
 import Image from "next/image";
 import LogoutButton from "../LogoutButton";
-import { getSession } from "@/lib/api/userSession";
+
 
 
 const DashboardSidebar =async ({user}) => {
@@ -24,7 +24,7 @@ const adminLinks = [
 
 const donorLinks = [
   { icon: LuLayoutDashboard, href: "/dashboard", label: "Overview" },
-  { icon: LuUser, href: "/dashboard/profile", label: "Profile Update" },
+  { icon: LuUser, href: "/dashboard/donor/profile", label: "Profile" },
   { icon: LuCalendarDays, href: "/dashboard/my-donation-requests", label: "My Donation Requests" },
   { icon: LuCirclePlus, href: "/dashboard/create-donation-request", label: "Create Donation Request" },
 ];
@@ -33,6 +33,7 @@ const volunteerLinks = [
   { icon: LuLayoutDashboard, href: "/dashboard", label: "Volunteer Overview" },
   { icon: FiClipboard, href: "/dashboard/all-blood-donation-request", label: "All Donation Requests" },
 ];
+
 const userNavLinks = {
   admin: adminLinks,
   donor: donorLinks,
