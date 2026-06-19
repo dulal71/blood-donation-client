@@ -1,11 +1,16 @@
 import DonationCard from '@/component/DonationCard';
+import DonationRequestContainer from '@/component/DonationRequestContainer';
+import { PaginationWithEllipsis } from '@/component/Pagination';
+
 import { getDonations } from '@/lib/api/dontion';
 import React from 'react';
 import { FaHeartbeat } from 'react-icons/fa';
 
-const DonationRequest =async () => {
-    const donations = await getDonations("pending")
-    console.log(donations);
+const DonationRequest =async ({searchParams}) => {
+   const query=await searchParams
+  
+  const donations = await getDonations("pending",query.page)
+console.log(donations);
     return (
         <div className="w-8/12 mx-auto">
            <div className="my-8">
@@ -20,12 +25,10 @@ const DonationRequest =async () => {
         </p>
       </div>
      
-     
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {
-            donations.map(donation => <DonationCard key={donation._id}  request={donation}></DonationCard>)
-        }
-        </div>   
+     <div>
+      <DonationRequestContainer donations={donations}></DonationRequestContainer>
+     </div>
+      
         </div>
     );
 };

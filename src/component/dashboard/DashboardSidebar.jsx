@@ -1,4 +1,4 @@
-
+'use client'
 
 import { LuLayoutDashboard, LuUser, LuCalendarDays, LuSettings, LuCalendar, LuHistory, LuCirclePlus, LuLogOut, LuChrome } from "react-icons/lu";
 import { MdOutlineCreditCard } from "react-icons/md";
@@ -11,11 +11,12 @@ import Link from "next/link";
 
 import Image from "next/image";
 import LogoutButton from "../LogoutButton";
+import { usePathname } from "next/navigation";
 
 
 
-const DashboardSidebar =async ({user}) => {
-  console.log(user);
+const DashboardSidebar = ({user}) => {
+ const pathname = usePathname()
 const adminLinks = [
   { icon: LuLayoutDashboard, href: "/dashboard", label: "Admin Overview" },
     { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
@@ -75,14 +76,18 @@ const navItems=userNavLinks[user?.role || 'donor']
     </div>
   <nav className="flex flex-col gap-1">
                 {navItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
-                    href={item.href}
-                  >
-                    <item.icon className="size-5 text-muted" />
-                    {item.label}
-                  </Link>
+                 <Link
+  key={item.label}
+  href={item.href}
+  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
+    pathname === item.href
+      ? "bg-red-50 text-red-700"
+      : "text-gray-800 hover:bg-gray-50"
+  }`}
+>
+  <item.icon className="size-5" />
+  {item.label}
+</Link>
                 ))}
                 <div className="my-2 border-t border-default/50" />
                

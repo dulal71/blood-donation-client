@@ -1,6 +1,7 @@
  'use client'
 
 import { Button } from "@heroui/react";
+import Link from "next/link";
 import { useState } from "react";
 import { FaCalendarAlt, FaClock, FaEye, FaTint } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
@@ -18,10 +19,7 @@ import { MdLocationOn } from "react-icons/md";
  };
  
  export default function DonationCard({ request }) {
-      const [requests, setRequests]   = useState([]);
-      const [loading, setLoading]     = useState(true);
-      const [search, setSearch]       = useState("");
-      const [filterBlood, setFilterBlood] = useState("");
+   
   const formattedDate = new Date(request.donationDate).toLocaleDateString("en-GB", {
     day: "numeric", month: "short", year: "numeric",
   });
@@ -82,14 +80,13 @@ import { MdLocationOn } from "react-icons/md";
         <span className="text-[10px] font-black uppercase tracking-[0.15em] text-amber-700">Pending</span>
       </div>
 
-      <Button
-        size="md"
-        onPress={() => onView(request._id)}
+      <Link
+        
+      href={`/dashboard/${request._id}`}
         className="bg-slate-900 text-white font-bold rounded-2xl px-6 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-slate-200"
-        endContent={<FaEye size={14} />}
-      >
-        View
-      </Button>
+        >
+        Details
+      </Link>
     </div>
   </div>
 </div>
