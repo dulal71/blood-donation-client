@@ -3,7 +3,7 @@
 import { LuLayoutDashboard, LuUser, LuCalendarDays, LuSettings, LuCalendar, LuHistory, LuCirclePlus, LuLogOut, LuChrome } from "react-icons/lu";
 import { MdOutlineCreditCard } from "react-icons/md";
 import { FiUsers, FiClipboard } from "react-icons/fi";
-import { IoBarChartOutline } from "react-icons/io5";
+import { IoBarChartOutline, IoMenuSharp } from "react-icons/io5";
 import {Button, Drawer} from "@heroui/react";
 
 import Link from "next/link";
@@ -93,38 +93,36 @@ const navItems=userNavLinks[user?.role || 'donor']
               </nav>
   </>
     return (
-     <>
-  <div className="flex min-h-screen">
+      <>
+{/* desktop sidebar */}
+     <aside className="hidden w-64 shrink-0 border-r border-default p-4 lg:block">
+            {navLink}
+        </aside>
+       {/* Mobile and md Screen sidebar */}
+        <Drawer>
+          <div className="lg:hidden z-30 w-full border-b border-zinc-200 bg-white/90 backdrop-blur-md py-3 px-2">
+ <Button className="lg:hidden rounded-none " variant="ghost" >
+        <IoMenuSharp size={50} />
+        Menu
+      </Button>
+          </div>
+     
+      <Drawer.Backdrop>
+        <Drawer.Content placement="left">
+          <Drawer.Dialog>
+            <Drawer.CloseTrigger />
+            <Drawer.Header>
+              <Drawer.Heading>Navigation</Drawer.Heading>
+            </Drawer.Header>
+            <Drawer.Body>
+              {navLink}
+            </Drawer.Body>
+          </Drawer.Dialog>
+        </Drawer.Content>
+      </Drawer.Backdrop>
+    </Drawer>
+        </>
     
-   {/* desktop sidebar */}
-    <aside className="hidden w-64 shrink-0 border-r border-zinc-200 p-4 lg:block">
-      {navLink}
-    </aside>
-
-  {/* Mobile menu */}
-    <div className="lg:hidden w-full">
-      <Drawer>
-        <div className="w-full border-b border-zinc-200 p-4">
-          <Button variant="outline" className="w-full flex items-center justify-center gap-2">
-            <ImMenu /> Menu
-          </Button>
-        </div>
-        
-        <Drawer.Backdrop>
-          <Drawer.Content placement="left">
-            <Drawer.Dialog>
-              <Drawer.CloseTrigger />
-              <Drawer.Body>
-                {navLink}
-              </Drawer.Body>
-            </Drawer.Dialog>
-          </Drawer.Content>
-        </Drawer.Backdrop>
-      </Drawer>
-    </div> 
-  </div>
-</>
-        
     );
 };
 
