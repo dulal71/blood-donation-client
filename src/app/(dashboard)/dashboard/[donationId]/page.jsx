@@ -140,11 +140,9 @@ const DonationDetails = async ({ params }) => {
         <button className="flex-1 py-2.5 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
           Accept
         </button>
-        <button className="flex-1 py-2.5 bg-gray-50 text-gray-700 border border-gray-200 rounded-lg text-sm hover:bg-gray-100 transition-colors">
-          Edit
-        </button>
+       
         <button className="flex-1 py-2.5 bg-gray-50 text-red-500 border border-red-100 rounded-lg text-sm hover:bg-red-50 transition-colors">
-          Delete
+          Cancel
         </button>
       </div>
     </div>

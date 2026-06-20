@@ -1,11 +1,23 @@
 "use client";
 
 import {Pagination} from "@heroui/react";
-import {useState} from "react";
+import { useRouter } from "next/navigation";
 
-export function PaginationWithEllipsis({page ,setPage , donations}) {
+import {useEffect, useState} from "react";
 
-  const totalPages = donations.length;
+export function PaginationWithEllipsis({donations,totalData}) {
+  const [page,setPage]=useState(1)
+const router= useRouter()
+  useEffect(()=>{
+    const params= new URLSearchParams
+    if(page){
+params.set('page',page)
+    }
+     const path= `?${params.toString()}`
+       router.push(path)
+  },[page])
+const perPage = 5
+  const totalPages =Math.ceil(totalData / perPage);
   
 
   const getPageNumbers = () => {
@@ -28,7 +40,10 @@ const pages=[]
       pages.push("ellipsis");
     }
 
-    pages.push(totalPages);
+    if(totalPages > 1 && !pages.includes(totalPages) ){
+  pages.push(totalPages);
+    }
+  
 
     return pages;
   };
