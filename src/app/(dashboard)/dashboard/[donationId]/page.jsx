@@ -1,4 +1,7 @@
+import RequestConfirmModal from '@/component/RequestConfirmModal';
 import { getDonationsById } from '@/lib/api/donationById';
+import { getSession } from '@/lib/api/userSession';
+import Link from 'next/link';
 import React from 'react';
 import { FaTint, FaUser, FaHospital, FaMapMarkerAlt, FaEnvelope, FaCalendarAlt, FaClock, FaComment } from 'react-icons/fa';
 
@@ -31,6 +34,7 @@ const InfoRow = ({ icon, label, value, sub }) => (
 );
 
 const DonationDetails = async ({ params }) => {
+  const user = await getSession()
   const { donationId } = await params;
   const donation = await getDonationsById(donationId);
   console.log(donation);
@@ -137,13 +141,10 @@ const DonationDetails = async ({ params }) => {
 
       {/* Action buttons */}
       <div className="flex gap-3 pt-2">
-        <button className="flex-1 py-2.5 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
-          Accept
-        </button>
-       
-        <button className="flex-1 py-2.5 bg-gray-50 text-red-500 border border-red-100 rounded-lg text-sm hover:bg-red-50 transition-colors">
-          Cancel
-        </button>
+        <RequestConfirmModal donation={donation} user={user}></RequestConfirmModal>
+       <Link href={'/donations-requests'} className="flex-1 text-center py-2.5 bg-gray-50 text-red-500 border border-red-100 rounded-lg text-sm hover:bg-red-50 transition-colors">
+          Back
+        </Link>
       </div>
     </div>
   );
