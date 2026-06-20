@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import {useEffect, useState} from "react";
 
-export function PaginationWithEllipsis({donations,totalData}) {
+export function PaginationWithEllipsis({totalData}) {
   const [page,setPage]=useState(1)
 const router= useRouter()
   useEffect(()=>{

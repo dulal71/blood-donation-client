@@ -1,24 +1,16 @@
-'use client'
 
-import { useEffect, useState } from "react";
+
+
 import DonationCard from "./DonationCard";
 import { PaginationWithEllipsis } from "./Pagination";
-import { useRouter } from "next/navigation";
+
 import EmptyMessage from "./EmptyMessage";
 
 
-const DonationRequestContainer = ({donations}) => {
-    const [page,setPage]=useState(1)
-const router = useRouter()
+const DonationRequestContainer = ({donations,totalData}) => {
+  
 
-    useEffect(()=>{
-     const params = new URLSearchParams()
-     if(page){
-        params.set('page',page)
-     }
-     const path= `?${params.toString()}`
-     router.push(path)
-    },[page])
+    
     return (
         <>
          {
@@ -30,7 +22,7 @@ const router = useRouter()
         }
         </div>
        <div className='my-3'>
-        <PaginationWithEllipsis page={page} setPage={setPage} donations={donations}></PaginationWithEllipsis>
+        <PaginationWithEllipsis totalData={totalData} donations={donations}></PaginationWithEllipsis>
        </div>  
     </div>  
 :<EmptyMessage></EmptyMessage> 
