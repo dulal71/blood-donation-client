@@ -8,20 +8,24 @@ import DonationActionsModal from "./DonationActionsModal";
 
 
 const bloodColor = {
-  "A+": "danger",  "A-": "danger",
-  "B+": "warning", "B-": "warning",
-  "AB+": "secondary", "AB-": "secondary",
-  "O+": "success", "O-": "success",
+  "A+": "bg-red-100 text-red-600",
+  "A-": "bg-red-100 text-red-600",
+  "B+": "bg-orange-100 text-orange-600",
+  "B-": "bg-orange-100 text-orange-600",
+  "AB+": "bg-purple-100 text-purple-600",
+  "AB-": "bg-purple-100 text-purple-600",
+  "O+": "bg-green-100 text-green-600",
+  "O-": "bg-green-100 text-green-600",
 };
-
 const statusConfig = {
-  pending:    { label: "Pending",     color: "warning"  },
-  inprogress: { label: "In Progress", color: "primary"  },
-  done:       { label: "Completed",   color: "success"  },
-  canceled:   { label: "Canceled",    color: "default"  },
+  pending:    { label: "Pending",     className: "bg-yellow-100 text-yellow-700"  },
+  inprogress: { label: "In Progress", className: "bg-blue-100 text-blue-700"      },
+  done:       { label: "Completed",   className: "bg-green-100 text-green-700"    },
+  canceled:   { label: "Canceled",    className: "bg-gray-100 text-gray-600"      },
 };
 
 const DonationRequestTable = ({donations}) => {
+ 
   
    
   return (
@@ -45,8 +49,8 @@ const DonationRequestTable = ({donations}) => {
 
           <Table.Body>
             {donations.map((donation, index) => {
-              const blood  = bloodColor[donation.bloodGroup] ?? "danger";
-              const status = statusConfig[donation.status?.toLowerCase()] ?? statusConfig.pending;
+ 
+              const status = statusConfig[donation.status?.toLowerCase()] 
 
               const formattedDate = new Date(donation.donationDate).toLocaleDateString("en-GB", {
                 day: "numeric", month: "short", year: "numeric",
@@ -74,11 +78,11 @@ const DonationRequestTable = ({donations}) => {
 
                   <Table.Cell>
                     <div>
-                      <Chip color={blood} variant="flat" size="sm">
-                        <div className="flex items-center gap-1 font-bold">
-                          <FaTint size={9} />
-                          <span>{donation.bloodGroup}</span>
-                        </div>
+                      <Chip className={bloodColor[donation.bloodGroup]} variant="flat" size="sm">
+                        <span className={`flex items-center gap-1 font-bold px-2 py-1 rounded-full text-xs ${bloodColor[donation.bloodGroup] ?? "bg-red-100 text-red-600"}`}>
+                        <FaTint size={9} />
+                         {donation.bloodGroup}
+                          </span>
                       </Chip>
                     </div>
                   </Table.Cell>
@@ -98,7 +102,7 @@ const DonationRequestTable = ({donations}) => {
 
                   <Table.Cell>
                     <div>
-                      <Chip color={status.color} variant="flat" size="sm">
+                      <Chip className={status.className} variant="flat" size="sm">
                         <div>{status.label}</div>
                       </Chip>
                     </div>
