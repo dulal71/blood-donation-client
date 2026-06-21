@@ -98,14 +98,15 @@ const DonationActionsModal = ({donation}) => {
 {/* status: done */}
 {donation.status === "done" && (
   <div className="py-1">
-    <Button
-      className="w-full justify-start gap-2.5 px-3 text-sm font-normal h-9 rounded-none border-0 shadow-none hover:bg-accent"
+    <Link
+     href={`/dashboard/my-donation-requests/${donation._id}`}
+      className="w-full flex items-center justify-start gap-2.5 px-3 text-sm font-normal h-9 rounded-2xl border-0 shadow-none hover:bg-accent text-black"
       variant="ghost"
       slot="close"
     >
       <FiEye className="h-4 w-4 text-muted-foreground" />
       View details
-    </Button>
+    </Link>
   </div>
 )}
 
