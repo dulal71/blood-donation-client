@@ -6,10 +6,15 @@ import { useState } from "react";
 import { TbDroplet, TbInfoCircle, TbCheck } from "react-icons/tb";
 
 const RequestConfirmModal = ({ donation,user }) => {
-  
+  console.log(user);
   const handleConfirm = async () => {
     try{
-const res = await updateStatus(donation._id,{status: 'inprogress'});
+const res = await updateStatus(donation._id,
+  {status: 'inprogress',
+   donorId: user.id,
+   donorEmail:user.email,
+   donorName:user.name
+});
    
     if(res.modifiedCount > 0){
       toast.success("Donation confirmed successfully!");

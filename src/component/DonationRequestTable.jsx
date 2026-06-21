@@ -1,26 +1,17 @@
-'use client'
+
 
 import { Table, Chip, Button } from "@heroui/react";
 import { FaTint } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
-import Link from "next/link";
+
 import DonationActionsModal from "./DonationActionsModal";
 
 
-const bloodColor = {
-  "A+": "bg-red-100 text-red-600",
-  "A-": "bg-red-100 text-red-600",
-  "B+": "bg-orange-100 text-orange-600",
-  "B-": "bg-orange-100 text-orange-600",
-  "AB+": "bg-purple-100 text-purple-600",
-  "AB-": "bg-purple-100 text-purple-600",
-  "O+": "bg-green-100 text-green-600",
-  "O-": "bg-green-100 text-green-600",
-};
+
 const statusConfig = {
   pending:    { label: "Pending",     className: "bg-yellow-100 text-yellow-700"  },
   inprogress: { label: "In Progress", className: "bg-blue-100 text-blue-700"      },
-  done:       { label: "Completed",   className: "bg-green-100 text-green-700"    },
+  done:       { label: "Done",   className: "bg-green-100 text-green-700"    },
   canceled:   { label: "Canceled",    className: "bg-gray-100 text-gray-600"      },
 };
 
@@ -78,8 +69,8 @@ const DonationRequestTable = ({donations}) => {
 
                   <Table.Cell>
                     <div>
-                      <Chip className={bloodColor[donation.bloodGroup]} variant="flat" size="sm">
-                        <span className={`flex items-center gap-1 font-bold px-2 py-1 rounded-full text-xs ${bloodColor[donation.bloodGroup] ?? "bg-red-100 text-red-600"}`}>
+                      <Chip variant="flat" size="md">
+                        <span className= "flex items-center gap-1 font-bold px-2 py-1 rounded-full text-md text-red-600">
                         <FaTint size={9} />
                          {donation.bloodGroup}
                           </span>
@@ -110,7 +101,7 @@ const DonationRequestTable = ({donations}) => {
 
                   <Table.Cell>
                     <div>
-                     <DonationActionsModal></DonationActionsModal>
+                     <DonationActionsModal donation={donation}></DonationActionsModal>
                     </div>
                   </Table.Cell>
 
