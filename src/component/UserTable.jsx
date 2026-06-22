@@ -1,222 +1,319 @@
-'use client'
-import { useState } from "react";
+'use client';
 
-const PER_PAGE = 5;
+import { useState, useMemo,useTransition } from "react";
+import Image from "next/image";
+import { FaHandshakeSimple } from "react-icons/fa6";
+import { MdAdminPanelSettings, MdBlock, MdCheckCircle } from "react-icons/md";
+import { HiDotsVertical } from "react-icons/hi";
+import { HiMagnifyingGlass } from "react-icons/hi2";
+import { updateUserRole } from "@/lib/action/updateUserRole";
+import { updateUserStatus } from "@/lib/action/updateUserStatus";
 
-const AVATAR_COLORS = [
-  "bg-violet-100 text-violet-700",
-  "bg-teal-100 text-teal-700",
-  "bg-blue-100 text-blue-700",
-  "bg-orange-100 text-orange-700",
-  "bg-pink-100 text-pink-700",
-  "bg-green-100 text-green-700",
-];
-
-function getInitials(name) {
+function getInitials(name = "") {
   return name.split(" ").map((w) => w[0]).join("").substring(0, 2).toUpperCase();
 }
-const UserTable = ({users,total}) => {
- const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [page, setPage] = useState(1);
+
+const ROLES = ["all", "donor", "volunteer", "admin"];
+const STATUSES = ["all", "active", "blocked"];
+
+export default function UserTable({ users = [], total = 0, onBlock, onUnblock, onMakeVolunteer, onMakeAdmin, onMakeDonor }) {
+  // Modal confirmation states
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+   const [success, setSuccess] = useState(false);
+    const [pendingChange, setPendingChange] = useState(null);
+    const [statusChange, setStatusChange] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+ const [isPending, startTransition] = useTransition();
 
-  const filtered = users.filter((u) => {
-    const matchStatus = statusFilter === "all" || u.status === statusFilter;
-    const q = search.toLowerCase();
-    const matchQ = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
-    return matchStatus && matchQ;
-  });
+  const filtered = useMemo(() => {
+    return users.filter((u) => {
+      const matchSearch =
+        u.name?.toLowerCase().includes(search.toLowerCase()) ||
+        u.email?.toLowerCase().includes(search.toLowerCase());
+      const matchRole = roleFilter === "all" || u.role === roleFilter;
+      const matchStatus = statusFilter === "all" || u.status === statusFilter;
+      return matchSearch && matchRole && matchStatus;
+    });
+  }, [users, search, roleFilter, statusFilter]);
+   
+  const handleStatusChange = async (userId, newStatus) => {
+      setStatusChange({userId,newStatus})
+      setSuccess(true)  
+    };
+    const confirmStatusChange = () => {
+        if (!statusChange) return;
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
-  const currentPage = Math.min(page, totalPages);
-  const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+        startTransition(async () => {
+            try {
+                await updateUserStatus(statusChange.userId, statusChange.newStatus);
+                // Close modal on success
+                setSuccess(false);
+                setStatusChange(null);
+            } catch (error) {
+                console.error("Failed to update user role:", error);
+            }
+        });
+    };
 
+   const initiateRoleChange = (userId, userName, newRole) => {
+        setPendingChange({ userId, userName, newRole });
+        setIsConfirmOpen(true);
+    };
+   
+    // Executes the Server Action upon confirmation inside a transition context
+    const confirmRoleChange = () => {
+        if (!pendingChange) return;
+
+        startTransition(async () => {
+            try {
+                await updateUserRole(pendingChange.userId, pendingChange.newRole);
+                // Close modal on success
+                setIsConfirmOpen(false);
+                setPendingChange(null);
+            } catch (error) {
+                console.error("Failed to update user role:", error);
+            }
+        });
+    };
   return (
     <div className="p-6 bg-gray-50 min-h-screen" onClick={() => setOpenMenu(null)}>
-      <div className="max-w-5xl mx-auto">
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-semibold text-gray-900">All Users</h1>
-          <span className="text-sm bg-white border border-gray-200 rounded-full px-3 py-1 text-gray-500">
-            {total} total
-          </span>
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold">All Users</h1>
+        <span className="text-sm text-gray-400">{total} total</span>
+      </div>
+
+      {/* SEARCH + FILTER */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 flex-1 min-w-[200px]">
+          <HiMagnifyingGlass className="text-gray-400 shrink-0" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="text-sm outline-none w-full bg-transparent"
+          />
         </div>
 
-        {/* Toolbar */}
-        <div className="flex gap-3 mb-4 flex-wrap">
-          <div className="relative flex-1 min-w-[200px]">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Search by name or email…"
-              className="w-full pl-4 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-violet-200"
-            />
-          </div>
-          {["all", "active", "blocked"].map((f) => (
-            <button
-              key={f}
-              onClick={() => { setStatusFilter(f); setPage(1); }}
-              className={`px-4 py-2 text-sm rounded-lg border transition-colors capitalize ${
-                statusFilter === f
-                  ? "bg-violet-50 border-violet-300 text-violet-700 font-medium"
-                  : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              {f}
-            </button>
+        <select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white outline-none cursor-pointer"
+        >
+          {ROLES.map((r) => (
+            <option key={r} value={r}>{r === "all" ? "All Roles" : r.charAt(0).toUpperCase() + r.slice(1)}</option>
           ))}
-        </div>
+        </select>
 
-        {/* Table */}
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-100">
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white outline-none cursor-pointer"
+        >
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>{s === "all" ? "All Status" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* TABLE */}
+      <div className="max-w-5xl mx-auto bg-white rounded-xl border overflow-visible">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="text-left p-3">User</th>
+              <th className="text-left p-3">Role</th>
+              <th className="text-left p-3">Status</th>
+              <th className="text-right p-3">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {filtered.length === 0 ? (
               <tr>
-                {["User", "Role", "Status", "Actions"].map((h) => (
-                  <th key={h} className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide ${h === "Actions" ? "text-right" : "text-left"}`}>
-                    {h}
-                  </th>
-                ))}
+                <td colSpan={4} className="text-center p-6 text-gray-400">
+                  No users found
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {slice.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="text-center py-12 text-gray-400">No users found</td>
-                </tr>
-              ) : (
-                slice.map((user, idx) => (
-                  <tr key={user.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+            ) : (
+              filtered.map((user) => (
+                <tr key={user.id} className="border-b hover:bg-gray-50">
 
-                    {/* Avatar + Name + Email */}
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 ${AVATAR_COLORS[idx % AVATAR_COLORS.length]}`}>
-                          {user.avatar
-                            ? <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
-                            : getInitials(user.name)
-                          }
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{user.name}</p>
-                          <p className="text-xs text-gray-400">{user.email}</p>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Role */}
-                    <td className="px-4 py-3">
-                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                        user.role === "admin" ? "bg-violet-100 text-violet-700"
-                        : user.role === "volunteer" ? "bg-teal-100 text-teal-700"
-                        : "bg-gray-100 text-gray-600"
-                      }`}>
-                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                      </span>
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${
-                        user.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                      }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${user.status === "active" ? "bg-green-500" : "bg-red-500"}`} />
-                        {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                      </span>
-                    </td>
-
-                    {/* Three dot menu */}
-                    <td className="px-4 py-3 z-50">
-                      <div className="flex justify-end relative" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => setOpenMenu(openMenu === user.id ? null : user.id)}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-100 text-gray-500 transition-colors text-lg"
-                        >
-                          ⋮
-                        </button>
-
-                        {openMenu === user.id && (
-                          <div className="absolute right-0 top-9 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-44 py-1 overflow-hidden">
-
-                            <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide px-3 pt-2 pb-1">Status</p>
-
-                            {user.status === "active" ? (
-                              <button onClick={() => { onBlock?.(user); setOpenMenu(null); }}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                🚫 Block user
-                              </button>
-                            ) : (
-                              <button onClick={() => { onUnblock?.(user); setOpenMenu(null); }}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-green-600 hover:bg-green-50 transition-colors">
-                                ✅ Unblock user
-                              </button>
-                            )}
-
-                            {(user.role === "donor" || user.role !== "admin") && (
-                              <>
-                                <div className="h-px bg-gray-100 my-1" />
-                                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide px-3 pt-1 pb-1">Role</p>
-
-                                {user.role === "donor" && (
-                                  <button onClick={() => { onMakeVolunteer?.(user); setOpenMenu(null); }}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-violet-600 hover:bg-violet-50 transition-colors">
-                                    🤝 Make volunteer
-                                  </button>
-                                )}
-
-                                {user.role !== "admin" && (
-                                  <button onClick={() => { onMakeAdmin?.(user); setOpenMenu(null); }}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-violet-600 hover:bg-violet-50 transition-colors">
-                                    🛡️ Make admin
-                                  </button>
-                                )}
-                              </>
-                            )}
-                          </div>
+                  {/* USER */}
+                  <td className="p-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold bg-gray-100">
+                        {user.image ? (
+                          <Image src={user.image} width={36} height={36} className="rounded-full" alt="user" />
+                        ) : (
+                          getInitials(user.name)
                         )}
                       </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                      <div>
+                        <p className="font-medium">{user.name}</p>
+                        <p className="text-xs text-zinc-500">{user.email}</p>
+                      </div>
+                    </div>
+                  </td>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-4">
-            <p className="text-sm text-gray-500">
-              Showing {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, filtered.length)} of {filtered.length}
-            </p>
-            <div className="flex gap-1.5">
-              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40">
-                ‹
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button key={p} onClick={() => setPage(p)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm border transition-colors ${
-                    p === currentPage ? "bg-violet-600 text-white border-violet-600" : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
-                  }`}>
-                  {p}
-                </button>
-              ))}
-              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40">
-                ›
-              </button>
-            </div>
-          </div>
-        )}
+                  {/* ROLE */}
+                  <td className="p-3">
+                    <span className="px-2 py-1 text-xs rounded bg-gray-100 capitalize">{user.role}</span>
+                  </td>
 
+                  {/* STATUS */}
+                  <td className="p-3">
+                    <span className={`px-2 py-1 text-xs rounded capitalize ${
+                      user.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    }`}>
+                      {user.status}
+                    </span>
+                  </td>
+
+                  {/* ACTION */}
+                  <td className="p-1 text-right relative">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setOpenMenu((prev) => (prev === user.id ? null : user.id)); }}
+                      className="p-1.5 hover:bg-gray-100 rounded-full transition"
+                    >
+                      <HiDotsVertical className="text-gray-500" />
+                    </button>
+
+                    {openMenu === user.id && (
+                      <div
+                        className="absolute right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 text-xs py-1 w-36"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <p className="px-3 py-1.5 text-gray-400 font-medium">Status</p>
+                        {user.status === "active" ? (
+                          <button  onClick={() => handleStatusChange(user.id, 'block')} className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 transition">
+                            <MdBlock size={14} /> Block
+                          </button>
+                        ) : (
+                          <button onClick={() => handleStatusChange(user.id, 'active')} className="flex items-center gap-2 w-full px-3 py-2 text-green-600 hover:bg-green-50 transition">
+                            <MdCheckCircle size={14} /> Unblock
+                          </button>
+                        )}
+
+                        <div className="border-t my-1" />
+                        <p className="px-3 text-gray-400 font-medium">Role</p>
+
+                        {user.role === "donor" && (
+                          <>
+                            <button onClick={() => initiateRoleChange(user.id, user.name, 'volunteer')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                              <FaHandshakeSimple size={14} /> Volunteer
+                            </button>
+                            <button onClick={() => initiateRoleChange(user.id, user.name, 'admin')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                              <MdAdminPanelSettings size={14} /> Make Admin
+                            </button>
+                          </>
+                        )}
+
+                        {user.role === "volunteer" && (
+                          <>
+                            <button onClick={() => initiateRoleChange(user.id, user.name, 'donor')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                              <MdAdminPanelSettings size={14} /> Donor
+                            </button>
+                            <button onClick={() => initiateRoleChange(user.id, user.name, 'admin')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                              <MdAdminPanelSettings size={14} /> Make Admin
+                            </button>
+                          </>
+                        )}
+
+                        {user.role === "admin" && (
+                          <>
+                            <button onClick={() => initiateRoleChange(user.id, user.name, 'donor')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                              <MdAdminPanelSettings size={14} /> Donor
+                            </button>
+                            <button onClick={() => initiateRoleChange(user.id, user.name, 'volunteer')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                              <FaHandshakeSimple size={14} /> Volunteer
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
+       {isConfirmOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
+                    <div className="w-full max-w-sm bg-white border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
+                        <div className="space-y-2">
+                            <h3 className="text-base font-semibold text-red-500">
+                                Confirm Role Change
+                            </h3>
+                            <p className="text-xs text-zinc-800 leading-relaxed">
+                                Are you sure you want to change the role of <span className="text-red-600 font-medium">{pendingChange?.userName}</span> to <span className="text-red-600 font-medium capitalize">{pendingChange?.newRole}</span>? This alters system access and application flow parameters permissions immediately.
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-3 text-xs font-medium">
+                            <button
+                                disabled={isPending}
+                                onClick={() => { setIsConfirmOpen(false); setPendingChange(null); }}
+                                className="px-4 py-2 bg-red-600 text-white hover:text-zinc-200  hover:bg-red-800 border  rounded-md transition-colors disabled:opacity-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                disabled={isPending}
+                                onClick={confirmRoleChange}
+                                className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow-lg shadow-indigo-600/10 disabled:opacity-50 min-w-[76px] flex items-center justify-center"
+                            >
+                                {isPending ? (
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    'Confirm'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+       {success && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
+                    <div className="w-full max-w-sm bg-white border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
+                        <div className="space-y-2">
+                            <h3 className="text-base font-semibold text-red-500">
+                                Confirm Status Change
+                            </h3>
+                            <p className="text-xs text-zinc-800 leading-relaxed">
+                                Are you sure you want to change the role of <span className="text-red-600 font-medium">{statusChange?.userName}</span> to <span className="text-red-600 font-medium capitalize">{statusChange?.newStatus}</span>? This alters system access and application flow parameters permissions immediately.
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-3 text-xs font-medium">
+                            <button
+                                disabled={isPending}
+                                onClick={() => { setIsConfirmOpen(false); setPendingChange(null); }}
+                                className="px-4 py-2 bg-red-600 text-white hover:text-zinc-200  hover:bg-red-800 border  rounded-md transition-colors disabled:opacity-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                disabled={isPending}
+                                onClick={confirmStatusChange}
+                                className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow-lg shadow-indigo-600/10 disabled:opacity-50 min-w-[76px] flex items-center justify-center"
+                            >
+                                {isPending ? (
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    'Confirm'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
     </div>
   );
 }
-
-
-export default UserTable;

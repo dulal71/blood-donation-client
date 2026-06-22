@@ -12,7 +12,7 @@ const statusConfig = {
 
 const AllDonationRequestTable = ({donations,total}) => {
     return (
-       <div>
+      
        <div>
        <Table>
              <Table.ScrollContainer>
@@ -99,7 +99,7 @@ const AllDonationRequestTable = ({donations,total}) => {
              </Table.ScrollContainer>
            </Table>
        </div>
-        </div>
+       
     );
 };
 
