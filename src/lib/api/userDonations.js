@@ -2,6 +2,6 @@
 
 import { serverFetch } from "../service/get"
 
-export const getDonationByUserId=async(userId,page = 1)=>{
-return serverFetch(`/api/donationRequest/user/${userId}?page=${page}`)
+export const getDonationByUserId=async(userId,status,page = 1)=>{
+return serverFetch(`/api/donationRequest/user/${userId}?status=${status}&page=${page}`)
 }

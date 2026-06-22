@@ -9,13 +9,13 @@ import { CiMenuKebab } from "react-icons/ci";
 import { FiCheckCircle, FiEdit2, FiEye, FiMail, FiTrash2, FiUser, FiX } from "react-icons/fi";
 
 const DonationActionsModal = ({donation}) => {
- 
+ // handle modified status
   const handleStatus = async (status) => {
      try{
  const res = await updateStatus(donation._id,{status});
     
-     if (res.deletedCount > 0) {
-  alert("Donation deleted successfully!"); 
+    if (res.modifiedCount > 0) {
+  alert(`Donation ${status.status} successfully!`);
 }else {
        alert("Something went wrong. Please try again.");
      }
@@ -25,13 +25,13 @@ const DonationActionsModal = ({donation}) => {
      }
  
    };
-
+// handle delete
    const handleDelete = async()=>{
     try{
  const res = await deleteDonation(donation._id);
     
      if(res.deletedCount >  0){
-       alert("Donation confirmed successfully!");
+       alert("Donation Delete successfully!");
      }else {
        alert("Something went wrong. Please try again.");
      }
@@ -122,14 +122,13 @@ const DonationActionsModal = ({donation}) => {
       <FiEye className="h-4 w-4 text-muted-foreground" />
       View details
     </Link>
-    <Button
-      className="w-full justify-start gap-2.5 px-3 text-sm font-normal h-9 rounded-none border-0 shadow-none hover:bg-accent"
-      variant="ghost"
-      slot="close"
+    <Link
+    href={`/dashboard/my-donation-requests/${donation._id}/edit`}
+      className="w-full flex items-center justify-start gap-2.5 px-3 text-sm font-normal h-9 rounded-2xl border-0 shadow-none hover:bg-accent text-black"
     >
       <FiEdit2 className="h-4 w-4 text-muted-foreground" />
       Edit
-    </Button>
+    </Link>
 
     <div className="h-px bg-border/40 mx-2" />
 

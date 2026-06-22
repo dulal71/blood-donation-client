@@ -5,6 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import {
   FaUser, FaEnvelope, FaHospital, FaMapMarkerAlt,
   FaTint, FaCalendarAlt, FaClock, FaFileAlt, FaPaperPlane,
+  FaHandHoldingMedical,
 } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { districtsData, upazilasData } from "@/data/geoData";
@@ -206,7 +207,27 @@ export default function CreateDonationRequest() {
 
   // ── Form ──────────────────────────────────────────────────────────────────
   return (
-    <div className="flex items-center justify-center p-4 py-10">
+    <div>
+{/* Title */}
+<div className="mb-8 flex items-start gap-4 rounded-2xl border border-red-100 bg-red-50 p-5">
+  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+    <FaHandHoldingMedical className="text-2xl text-red-600" />
+  </div>
+
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900">
+      Create Donation Request
+    </h1>
+
+    <p className="mt-2 max-w-2xl text-sm text-gray-600">
+      Fill out the form below with accurate patient and donation details to
+      create a new blood donation request. This information will help eligible
+      donors respond quickly.
+    </p>
+  </div>
+</div>
+{/* Form */}
+<div className="flex items-center justify-center p-4 py-10">
       <Card className="w-full max-w-2xl shadow-xl rounded-2xl overflow-hidden">
 
         {/* Banner */}
@@ -373,5 +394,7 @@ export default function CreateDonationRequest() {
 
       </Card>
     </div>
+    </div>
+    
   );
 }

@@ -1,19 +1,27 @@
 import DonationRequestTable from "../DonationRequestTable";
 import Link from "next/link";
 import { FaHandHoldingHeart } from "react-icons/fa";
+import { HiOutlineHandRaised } from "react-icons/hi2";
 
-const DonorDashboard = ({ donations }) => {
+const DonorDashboard = ({ donations,user }) => {
  
     return (
     <div className="p-6">
 
       {/* Welcome */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Your recent donation requests are shown below.
-        </p>
-      </div>
+     <div className="mb-8">
+  <div className="flex items-center gap-3">
+    <HiOutlineHandRaised className="text-3xl text-red-500" />
+    <div>
+      <h1 className="text-2xl font-bold text-gray-900">
+        Welcome back, {user.name}!
+      </h1>
+      <p className="text-sm text-gray-500 mt-1">
+        Manage your donation requests and continue making a difference.
+      </p>
+    </div>
+  </div>
+</div>
 
       {/* Recent Donations */}
       {donations.length > 0 ? (
