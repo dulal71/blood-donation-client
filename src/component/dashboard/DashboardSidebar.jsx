@@ -22,8 +22,8 @@ const adminLinks = [
     { icon: LuUser, href: "/dashboard/profile", label: "Profile" },
       { icon: LuCalendarDays, href: "/dashboard/my-donation-requests", label: "My Donation Requests" },
       { icon: LuCirclePlus, href: "/dashboard/create-donation-request", label: "Create Donation Request" },
-  { icon: FiUsers, href: "/dashboard/all-users", label: "All Users" },
-  { icon: FiClipboard, href: "/dashboard/all-blood-donation-request", label: "All Donation Requests" },
+  { icon: FiUsers, href: "/dashboard/admin/all-users", label: "All Users" },
+  { icon: FiClipboard, href: "/dashboard/admin/all-blood-donation-request", label: "All Donation Requests" },
 ];
 
 const donorLinks = [
