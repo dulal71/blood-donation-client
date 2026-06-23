@@ -16,7 +16,7 @@ const data = await auth.api.adminUpdateUser({
     // This endpoint requires session cookies.
     headers: await headers(),
 });
-console.log(data);
+
 if(data){
     revalidatePath(USERS_PATH)
 }

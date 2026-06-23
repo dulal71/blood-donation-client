@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { auth } from "../auth";
 import { getSession } from "./userSession";
+import { serverFetch } from "../service/get";
 
 
 
@@ -25,4 +26,9 @@ const users = await auth.api.listUsers({
     headers: await headers(),
 });
 return users
+}
+
+
+export const users=async()=>{
+  return serverFetch('/api/user')  
 }

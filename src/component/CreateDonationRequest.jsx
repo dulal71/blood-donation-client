@@ -211,7 +211,7 @@ export default function CreateDonationRequest() {
 
 return (
   <>
-    {user.status === 'blocked' ? (
+    {user?.status === 'blocked' ? (
       <div className="max-w-xl mx-auto py-20 px-4 text-center">
         <div className="bg-red-50 p-8 rounded-3xl border border-red-100 shadow-sm">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 mx-auto mb-4">

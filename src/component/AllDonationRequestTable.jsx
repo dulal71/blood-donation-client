@@ -1,7 +1,8 @@
+'use client'
 import { Chip, Table } from "@heroui/react";
 import { FaTint } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
-import DonationActionsModal from "./DonationActionsModal";
+
 
 const statusConfig = {
   pending:    { label: "Pending",     className: "bg-yellow-100 text-yellow-700"  },

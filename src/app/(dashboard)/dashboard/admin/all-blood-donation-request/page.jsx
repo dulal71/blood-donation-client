@@ -1,6 +1,6 @@
 import AllDonationRequest from "@/component/AllDonationRequest";
 import StatusFilter from "@/component/StatusFilter";
-import { getDonations } from "@/lib/api/dontion";
+import { getDonations, getDonationsForAdmin } from "@/lib/api/dontion";
 import { MdBloodtype } from "react-icons/md";
 
 
@@ -10,7 +10,7 @@ const DonationRequest =async ({searchParams}) => {
     const page  = query?.page || 1;
   const status=query.status
 
-    const {result:donations , totalData} = await getDonations(status,page);
+    const {result:donations , totalData} = await getDonationsForAdmin(status,page);
     return (
       <div>
         {/* title */}

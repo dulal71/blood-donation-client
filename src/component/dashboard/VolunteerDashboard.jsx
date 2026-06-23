@@ -1,3 +1,4 @@
+import { users } from '@/lib/api/allUsers';
 import { getDonations } from '@/lib/api/dontion';
 import React from 'react';
 import { FaDonate, FaTint, FaUsers } from 'react-icons/fa';
@@ -5,7 +6,8 @@ import { FaDonate, FaTint, FaUsers } from 'react-icons/fa';
 const VolunteerDashboard =async ({user}) => {
    
     const {result:donations} = await getDonations();
-  
+    const allUsers = await users()
+    console.log(allUsers);
   
     const totalDonations = donations?.length 
     const funding = 10000;
@@ -30,7 +32,7 @@ const VolunteerDashboard =async ({user}) => {
           <FaUsers className="text-blue-600 text-3xl" />
           <div>
             <p className="text-gray-500">Total Donors</p>
-            <h2 className="text-2xl font-bold">100+</h2>
+            <h2 className="text-2xl font-bold">{allUsers.length}</h2>
           </div>
         </div>
           
