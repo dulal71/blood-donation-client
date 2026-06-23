@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { Form, TextField, Label, Input, Button } from 'react-aria-components';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { toast } from 'sonner';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -29,12 +30,13 @@ const {data ,error:authError}=await authClient.signIn.email({
 if(authError){
     setErrors(authError.message || "Invalid email or password."); 
 }else{
-  alert('Signed in successfully! Redirecting...')  
+  toast.success('Signed in successfully! Redirecting...')  
   setFormData({ email: '', password: '' });
     router.push(redirectTo)
 }
     }catch(err){
  setErrors("An unexpected network error occurred.");
+ toast.error("Login Failed")
     }finally{
  setIsLoading(false);
     }

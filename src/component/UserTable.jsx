@@ -8,6 +8,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { updateUserRole } from "@/lib/action/updateUserRole";
 import { unblockUser, updateUserStatus } from "@/lib/action/updateUserStatus";
+import { toast } from "sonner";
 
 function getInitials(name = "") {
   return name.split(" ").map((w) => w[0]).join("").substring(0, 2).toUpperCase();
@@ -17,14 +18,12 @@ const ROLES = ["all", "donor", "volunteer", "admin"];
 const BANNED_FILTERS = ["all", "active", "blocked"];
 
 export default function UserTable({ users = [], total = 0 }) {
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [pendingChange, setPendingChange] = useState(null);
-  const [openMenu, setOpenMenu] = useState(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [bannedFilter, setBannedFilter] = useState("all");
+  const [openMenu, setOpenMenu] = useState(null);
+const [modal, setModal] = useState({ isOpen: false, type: "", data: null });
   const [isPending, startTransition] = useTransition();
-
   const filtered = useMemo(() => {
     return users.filter((u) => {
       const matchSearch =
@@ -39,52 +38,29 @@ export default function UserTable({ users = [], total = 0 }) {
     });
   }, [users, search, roleFilter, bannedFilter]);
 
-  // handleBlock
-  const handleBlockUser = (userId) => {
-    startTransition(async () => {
-      try {
-        await updateUserStatus(userId);
-        setOpenMenu(null);
-      } catch (error) {
-        console.error("Failed to block user:", error);
-      }
-    });
-  };
-//handleUnblock
-  const handleUnblockUser = (userId) => {
-    startTransition(async () => {
-      try {
-        await unblockUser(userId);
-        setOpenMenu(null);
-      } catch (error) {
-        console.error("Failed to unblock user:", error);
-      }
-    });
-  };
 
-  // handle-role-change
-  const initiateRoleChange = (userId, userName, newRole) => {
-    setPendingChange({ userId, userName, newRole });
-    setIsConfirmOpen(true);
-  };
-
-  const confirmRoleChange = () => {
-    if (!pendingChange) return;
+const handleConfirm = async () => {
+    if (!modal.data) return;
     startTransition(async () => {
       try {
-        await updateUserRole(pendingChange.userId, pendingChange.newRole);
-        setIsConfirmOpen(false);
-        setPendingChange(null);
+        if (modal.type === "role") {
+        const res =   await updateUserRole(modal.data.userId, modal.data.newRole);
+       if(res){
+        toast.success('Update Role Successfully')
+       }
+      } else {
+       const res=   await updateUserStatus(modal.data.userId,modal.data.newStatus);
+         if(res){
+        toast.success('Update status Successfully')
+       }
+        }
+        
+        setModal({ isOpen: false, type: "", data: null });
         setOpenMenu(null);
       } catch (error) {
-        console.error("Failed to update user role:", error);
+        console.error("Failed:", error);
       }
     });
-  };
-//cancel-role-change
-  const cancelRoleChange = () => {
-    setIsConfirmOpen(false);
-    setPendingChange(null);
   };
 
   return (
@@ -187,12 +163,12 @@ export default function UserTable({ users = [], total = 0 }) {
 </span>
                   </td>
 
-                  {/* STATUS — banned field দিয়ে */}
+
                   <td className="p-3">
                     <span className={`px-2 py-1 text-xs rounded capitalize ${
-                      user.banned ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                      user.status === 'blocked' ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
                     }`}>
-                      {user.banned ? "Blocked" : "Active"}
+                      {user.status}
                     </span>
                   </td>
 
@@ -215,59 +191,112 @@ export default function UserTable({ users = [], total = 0 }) {
                       >
                         {/* STATUS ACTIONS */}
                         <p className="px-3 py-1.5 text-gray-400 font-medium">Status</p>
-                        {user.banned ? (
-                          <button
-                            onClick={() => handleUnblockUser(user.id)}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-green-600 hover:bg-green-50 transition"
-                          >
-                            <MdCheckCircle size={14} /> Unblock
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleBlockUser(user.id)}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 transition"
-                          >
-                            <MdBlock size={14} /> Block
-                          </button>
-                        )}
+                           <button
+              onClick={() => {
+              setModal({
+      isOpen: true,
+      type: "status",
 
-                        <div className="border-t my-1" />
+      data: { userId: user.id, newStatus: user.status === 'blocked' ? 'active' : 'blocked' }
+                 });
+               setOpenMenu(null);
+                   }}
+              className={`flex items-center gap-2 w-full px-3 py-2 transition ${
+    user.status === 'blocked' 
+      ? "text-green-600 hover:bg-green-50" 
+      : "text-red-600 hover:bg-red-50"
+  }`}
+>
+  {user.status === 'blocked' ? (
+    <>
+      <MdCheckCircle size={14} /> Unblock
+    </>
+  ) : (
+    <>
+      <MdBlock size={14} /> Block
+    </>
+  )}
+                            </button>
+                     <div className="border-t my-1" />
 
                         {/* ROLE ACTIONS */}
                         <p className="px-3 text-gray-400 font-medium">Role</p>
 
                         {user.role === "donor" && (
-                          <>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, "volunteer")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
-                              <FaHandshakeSimple size={14} /> Volunteer
-                            </button>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, "admin")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
-                              <MdAdminPanelSettings size={14} /> Make Admin
-                            </button>
+                        <>
+    <button 
+      onClick={() => setModal({ 
+        isOpen: true, 
+        type: "role", 
+        data: { userId: user.id, userName: user.name, newRole: "volunteer" } 
+      })}
+      className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition"
+    >
+      <FaHandshakeSimple size={14} /> Volunteer
+    </button>
+    
+    <button 
+      onClick={() => setModal({ 
+        isOpen: true, 
+        type: "role", 
+        data: { userId: user.id, userName: user.name, newRole: "admin" } 
+      })}
+      className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition"
+    >
+      <MdAdminPanelSettings size={14} /> Make Admin
+    </button>
                           </>
-                        )}
+                         )}
 
-                        {user.role === "volunteer" && (
-                          <>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, "donor")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
-                              <MdAdminPanelSettings size={14} /> Donor
-                            </button>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, "admin")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
-                              <MdAdminPanelSettings size={14} /> Make Admin
-                            </button>
-                          </>
-                        )}
+                       {user.role === "volunteer" && (
+                       <>
+    <button 
+      onClick={() => setModal({
+        isOpen: true,
+        type: "role",
+        data: { userId: user.id, userName: user.name, newRole: "donor" }
+      })}
+      className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition"
+    >
+      <MdAdminPanelSettings size={14} /> Donor
+    </button>
+    <button 
+      onClick={() => setModal({
+        isOpen: true,
+        type: "role",
+        data: { userId: user.id, userName: user.name, newRole: "admin" }
+      })}
+      className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition"
+    >
+      <MdAdminPanelSettings size={14} /> Make Admin
+    </button>
+                        </>
+                         )}
 
                         {user.role === "admin" && (
-                          <>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, "donor")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
-                              <MdAdminPanelSettings size={14} /> Donor
-                            </button>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, "volunteer")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
-                              <FaHandshakeSimple size={14} /> Volunteer
-                            </button>
+                         <>
+    <button 
+      onClick={() => setModal({
+        isOpen: true,
+        type: "role",
+        data: { userId: user.id, userName: user.name, newRole: "donor" }
+      })}
+      className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition"
+    >
+      <MdAdminPanelSettings size={14} /> Donor
+    </button>
+    <button 
+      onClick={() => setModal({ 
+        isOpen: true, 
+        type: "role", 
+        data: { userId: user.id, userName: user.name, newRole: "volunteer" } 
+      })}
+      className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition"
+    >
+      <FaHandshakeSimple size={14} /> Volunteer
+    </button>
                           </>
-                        )}
+                          )}
                       </div>
                     )}
                   </td>
@@ -278,42 +307,30 @@ export default function UserTable({ users = [], total = 0 }) {
         </table>
       </div>
 
-      {/* ROLE CHANGE CONFIRM MODAL */}
-      {isConfirmOpen && (
+      {modal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
-          <div className="w-full max-w-sm bg-white border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-base font-semibold text-red-500">Confirm Role Change</h3>
-              <p className="text-xs text-zinc-800 leading-relaxed">
-                Are you sure you want to change the role of{" "}
-                <span className="text-red-600 font-medium">{pendingChange?.userName}</span> to{" "}
-                <span className="text-red-600 font-medium capitalize">{pendingChange?.newRole}</span>?
-                This alters system access and permissions immediately.
-              </p>
-            </div>
-            <div className="flex items-center justify-end gap-3 text-xs font-medium">
-              <button
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="font-semibold text-red-600 mb-2">Confirm Action</h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Are you sure you want to {modal.type === "role" ? "change this user's role" : "update this user's status"}?
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setModal({ ...modal, isOpen: false })}
+                className="px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200"
+              >Cancel</button>
+              <button 
                 disabled={isPending}
-                onClick={cancelRoleChange}
-                className="px-4 py-2 bg-red-600 text-white hover:bg-red-800 rounded-md transition-colors disabled:opacity-50"
+                onClick={handleConfirm}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
               >
-                Cancel
-              </button>
-              <button
-                disabled={isPending}
-                onClick={confirmRoleChange}
-                className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow-lg shadow-indigo-600/10 disabled:opacity-50 min-w-[76px] flex items-center justify-center"
-              >
-                {isPending ? (
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  "Confirm"
-                )}
+                {isPending ? "Processing..." : "Confirm"}
               </button>
             </div>
           </div>
         </div>
       )}
+   
     </div>
   );
 }

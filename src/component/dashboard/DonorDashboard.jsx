@@ -5,7 +5,7 @@ import { FaHandHoldingHeart } from "react-icons/fa";
 import { HiOutlineHandRaised } from "react-icons/hi2";
 
 const DonorDashboard =async ({user}) => {
-  console.log(user);
+
  const {result:initialDonations } = await getDonationByUserId(user.id)
 
        const donations =initialDonations.slice(0,3)

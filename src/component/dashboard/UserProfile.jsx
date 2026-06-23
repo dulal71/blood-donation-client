@@ -202,7 +202,7 @@ export default function UserProfile() {
         <p className="text-gray-500 text-sm">{formData.email}</p>
         <div className="flex gap-2 mt-3">
           <Chip color={roleColor} variant="flat" className="font-medium">{formData.role}</Chip>
-          <Chip color={formData.banned ? "danger" : "success"} variant="dot">{formData.banned ? "Blocked" : "Active"}</Chip>
+          <Chip color={formData.status} variant="dot">{formData.status }</Chip>
         </div>
       </div>
     </div>

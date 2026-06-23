@@ -17,7 +17,7 @@ const DashboardLayout =async ({ children }) => {
       
       <div className="flex items-center gap-4">
         <span className="text-sm font-semibold text-red-700 bg-zinc-100 px-3 py-1 rounded-full">
-          {user.role.toUpperCase()}
+          {user?.role.toUpperCase()}
         </span>
       </div>
     </div>

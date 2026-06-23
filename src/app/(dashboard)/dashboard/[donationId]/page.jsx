@@ -2,150 +2,106 @@ import RequestConfirmModal from '@/component/RequestConfirmModal';
 import { getDonationsById } from '@/lib/api/donationById';
 import { getSession } from '@/lib/api/userSession';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import React from 'react';
-import { FaTint, FaUser, FaHospital, FaMapMarkerAlt, FaEnvelope, FaCalendarAlt, FaClock, FaComment } from 'react-icons/fa';
+import { FaTint, FaUser, FaHospital, FaMapMarkerAlt, FaCalendarAlt, FaClock, FaComment } from 'react-icons/fa';
 
+// Status Badge Component
 const StatusBadge = ({ status }) => {
   const styles = {
-    pending: { bg: '#FAEEDA', color: '#854F0B' },
-    inprogress: { bg: '#E6F1FB', color: '#185FA5' },
-    done: { bg: '#EAF3DE', color: '#3B6D11' },
+    pending: 'bg-amber-50 text-amber-700 border-amber-200',
+    inprogress: 'bg-blue-50 text-blue-700 border-blue-200',
+    done: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   };
-  const s = styles[status] || styles.pending;
   return (
-    <span
-      style={{ background: s.bg, color: s.color }}
-      className="text-xs font-medium px-3 py-1 rounded-full capitalize"
-    >
+    <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${styles[status] || styles.pending}`}>
       {status}
     </span>
   );
 };
 
-const InfoRow = ({ icon, label, value, sub }) => (
-  <div className="flex gap-3 items-start">
-    <span className="text-gray-400 mt-1 text-sm shrink-0">{icon}</span>
-    <div>
-      <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-      <p className="text-sm font-medium text-gray-900">{value}</p>
-      {sub && <p className="text-xs text-gray-400">{sub}</p>}
-    </div>
-  </div>
-);
-
 const DonationDetails = async ({ params }) => {
-  const user = await getSession()
+  const user = await getSession();
   const { donationId } = await params;
   const donation = await getDonationsById(donationId);
-  console.log(donation);
 
-  const {
-    bloodGroup,
-    donationDate,
-    donationTime,
-    fullAddress,
-    hospitalName,
-    recipientDistrict,
-    recipientName,
-    recipientUpazila,
-    requestMessage,
-    requesterEmail,
-    requesterName,
-    status,
-  } = donation;
+  if (!user) redirect(`/login?redirect=/dashboard/${donationId}`);
+  if (!donation) return <div className="p-10 text-center">Request not found.</div>;
 
-  const initials = requesterName
-    ?.split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-
-  const formattedDate = new Date(donationDate).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const { bloodGroup, donationDate, donationTime, fullAddress, hospitalName, recipientDistrict, recipientUpazila, requestMessage, requesterName, status } = donation;
+  const formattedDate = new Date(donationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <FaTint className="text-red-500 text-2xl" />
-        <h1 className="text-xl font-medium text-gray-900">Donation request details</h1>
-        <div className="ml-auto">
-          <StatusBadge status={status} />
+    <div className="max-w-2xl mx-auto py-10 px-4 space-y-8">
+      
+      {/* SECTION 1: Header */}
+      <header className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Donation Request</h1>
+          <p className="text-sm text-gray-500">Details about the blood donation need</p>
         </div>
-      </div>
+        <StatusBadge status={status} />
+      </header>
 
-      {/* Blood group + Date */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white border border-gray-100 rounded-xl p-4">
-          <p className="text-xs text-gray-400 mb-1">Blood group</p>
-          <p className="text-3xl font-medium text-red-500">{bloodGroup}</p>
+      {/* SECTION 2: Overview (Blood & Time) */}
+      <section className="grid grid-cols-2 gap-4">
+        <div className="bg-red-600 rounded-2xl p-6 text-white shadow-lg">
+          <p className="text-red-200 text-xs font-semibold uppercase">Blood Group</p>
+          <p className="text-4xl font-black mt-1">{bloodGroup}</p>
         </div>
-        <div className="bg-white border border-gray-100 rounded-xl p-4">
-          <p className="text-xs text-gray-400 mb-1">Donation date & time</p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <FaCalendarAlt className="text-gray-400 text-xs" />
-            <p className="text-sm font-medium text-gray-900">{formattedDate}</p>
-          </div>
-          <div className="flex items-center gap-1.5 mt-1">
-            <FaClock className="text-gray-400 text-xs" />
-            <p className="text-xs text-gray-400">{donationTime}</p>
-          </div>
+        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+          <p className="text-gray-400 text-xs font-semibold uppercase mb-3">Schedule</p>
+          <div className="flex items-center gap-2 text-sm text-gray-800 mb-2"><FaCalendarAlt className="text-red-500"/> {formattedDate}</div>
+          <div className="flex items-center gap-2 text-sm text-gray-800"><FaClock className="text-red-500"/> {donationTime}</div>
         </div>
-      </div>
+      </section>
 
-      {/* Recipient info */}
-      <div className="bg-white border border-gray-100 rounded-xl p-4 space-y-3">
-        <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Recipient info</p>
-        <InfoRow icon={<FaUser />} label="Recipient name" value={recipientName} />
-        <InfoRow icon={<FaHospital />} label="Hospital" value={hospitalName} />
-        <InfoRow
-          icon={<FaMapMarkerAlt />}
-          label="Location"
-          value={fullAddress}
-          sub={`${recipientUpazila}, ${recipientDistrict}`}
-        />
-      </div>
-
-      {/* Requester info */}
-      <div className="bg-white border border-gray-100 rounded-xl p-4">
-        <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3">Requester info</p>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-sm font-medium text-blue-600 shrink-0">
-            {initials}
+      {/* SECTION 3: Recipient Details */}
+      <section className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <h3 className="text-sm font-bold text-gray-900 mb-5 flex items-center gap-2">
+          <FaHospital className="text-red-400"/> Recipient Details
+        </h3>
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+             <div className="p-2 bg-gray-50 rounded-lg"><FaUser className="text-gray-400"/></div>
+             <div>
+                <p className="text-[10px] text-gray-400 uppercase font-bold">Name</p>
+                <p className="text-sm font-semibold text-gray-800">{donation.recipientName}</p>
+             </div>
           </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <FaUser className="text-gray-400 text-xs" />
-              <p className="text-sm font-medium text-gray-900">{requesterName}</p>
-            </div>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <FaEnvelope className="text-gray-400 text-xs" />
-              <p className="text-xs text-gray-400">{requesterEmail}</p>
-            </div>
+          <div className="flex items-center gap-4">
+             <div className="p-2 bg-gray-50 rounded-lg"><FaHospital className="text-gray-400"/></div>
+             <div>
+                <p className="text-[10px] text-gray-400 uppercase font-bold">Hospital</p>
+                <p className="text-sm font-semibold text-gray-800">{hospitalName}</p>
+             </div>
+          </div>
+          <div className="flex items-center gap-4">
+             <div className="p-2 bg-gray-50 rounded-lg"><FaMapMarkerAlt className="text-gray-400"/></div>
+             <div>
+                <p className="text-[10px] text-gray-400 uppercase font-bold">Address</p>
+                <p className="text-sm font-semibold text-gray-800">{fullAddress}, {recipientUpazila}, {recipientDistrict}</p>
+             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Request message */}
-      <div className="bg-white border border-gray-100 rounded-xl p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <FaComment className="text-gray-400 text-sm" />
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Request message</p>
-        </div>
-        <p className="text-sm text-gray-700 leading-relaxed">{requestMessage}</p>
-      </div>
+      {/* SECTION 4: Requester Note */}
+      <section className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+          <FaComment /> Requester Note
+        </h3>
+        <p className="text-sm text-gray-700 italic">"{requestMessage}"</p>
+        <p className="text-[10px] font-bold text-gray-900 mt-4">— {requesterName}</p>
+      </section>
 
-      {/* Action buttons */}
-      <div className="flex gap-3 pt-2">
-        <RequestConfirmModal donation={donation} user={user}></RequestConfirmModal>
-       <Link href={'/donations-requests'} className="flex-1 text-center py-2.5 bg-gray-50 text-red-500 border border-red-100 rounded-lg text-sm hover:bg-red-50 transition-colors">
+      {/* SECTION 5: Footer Actions */}
+      <footer className="flex gap-4 pt-4">
+        <div className="flex-1"><RequestConfirmModal donation={donation} user={user} /></div>
+        <Link href="/donations-requests" className="px-8 py-3 bg-white border border-gray-200 text-gray-600 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all">
           Back
         </Link>
-      </div>
+      </footer>
     </div>
   );
 };

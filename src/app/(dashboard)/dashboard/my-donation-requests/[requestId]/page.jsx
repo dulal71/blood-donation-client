@@ -88,16 +88,16 @@ console.log(donation);
       ? name.trim().split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase()
       : "?";
 
- // কার্ডের কমন স্টাইলিংয়ের জন্য একটি ভেরিয়েবল বা ক্লাস তৈরি করে নিতে পারেন
+
 const cardStyle = "bg-white/80 backdrop-blur-md border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-6 transition-all duration-300 hover:shadow-xl";
 
-// --- আপনার মূল রিটার্ন ব্লকের ভেতরে এগুলো পরিবর্তন করুন ---
+
 
 return (
   <div className="min-h-screen bg-gray-50/50 py-10 px-4">
     <div className="max-w-3xl mx-auto space-y-8">
 
-      {/* HERO SECTION - আধুনিক লুক */}
+      {/* HERO SECTION  */}
     <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
   {/* Header: Blood Group & Name */}
   <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">

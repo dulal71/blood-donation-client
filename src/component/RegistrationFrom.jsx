@@ -32,6 +32,7 @@ import { authClient } from "@/lib/auth-client";
 import Logo from "./Logo";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { uploadUserImage } from "@/lib/action/uploadImage";
 
 
 
@@ -99,23 +100,10 @@ export default function RegistrationForm() {
 
     setIsUploading(true);
     setErrors(prev => ({ ...prev, logo: null })); 
-
-    const imgFormData = new FormData();
-    imgFormData.append('image', file);
-
-    try {
-      const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMAGE_UPLOAD_API; 
-      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-        method: 'POST',
-        body: imgFormData
-      });
-      const data = await response.json();
-      
-      if (data.success) {
-        setLogoUrl(data.data.url); // ImgBB ডাইরেক্ট লিঙ্ক সেভ হচ্ছে
-      } else {
-        setErrors(prev => ({ ...prev, logo: "Upload failed. Try again." }));
-      }
+try {
+      const imageUrl =await uploadUserImage(file)
+      setLogoUrl(imageUrl); 
+    toast.success("Image uploaded successfully!");
     } catch (err) {
       setErrors(prev => ({ ...prev, logo: "Network error during upload" }));
     } finally {
@@ -164,6 +152,7 @@ export default function RegistrationForm() {
     try{
 const { data, error } = await authClient.signUp.email({
  ...finalSubmittedData,
+ status:'active'
  
     })
     if(error){
