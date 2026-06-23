@@ -4,11 +4,11 @@ import { getDonations } from '@/lib/api/dontion';
 
 import { FaUsers, FaDonate, FaTint } from "react-icons/fa";
 
-const AdminVolunteerDashboard = async ({user}) => {
+const AdminDashboard = async ({user}) => {
 
   const { users,total } = await getAllUsers();
   const {result:donations} = await getDonations();
-console.log(donations);
+
 
   const totalDonations = donations?.length 
   const funding = 10000;
@@ -61,4 +61,4 @@ console.log(donations);
   );
 };
 
-export default AdminVolunteerDashboard;
+export default AdminDashboard;

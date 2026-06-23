@@ -88,120 +88,116 @@ console.log(donation);
       ? name.trim().split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase()
       : "?";
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+ // কার্ডের কমন স্টাইলিংয়ের জন্য একটি ভেরিয়েবল বা ক্লাস তৈরি করে নিতে পারেন
+const cardStyle = "bg-white/80 backdrop-blur-md border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-6 transition-all duration-300 hover:shadow-xl";
 
-        {/* HERO */}
-        <div className="bg-[#1a1a2e] rounded-3xl p-6 shadow-xl flex gap-5 items-center">
-          <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center">
-            <div className="w-14 h-14 rounded-full bg-[#e63946] flex items-center justify-center text-white text-xl font-semibold">
-              {bloodGroup}
-            </div>
-          </div>
+// --- আপনার মূল রিটার্ন ব্লকের ভেতরে এগুলো পরিবর্তন করুন ---
 
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-semibold text-white truncate">
-              {recipientName}
-            </h1>
+return (
+  <div className="min-h-screen bg-gray-50/50 py-10 px-4">
+    <div className="max-w-3xl mx-auto space-y-8">
 
-            <p className="text-sm text-gray-300 flex items-center gap-2 mt-1">
-              <FaHospital size={13} />
-              {hospitalName} · {fullAddress}
-            </p>
+      {/* HERO SECTION - আধুনিক লুক */}
+    <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+  {/* Header: Blood Group & Name */}
+  <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+    <div className="w-20 h-20 flex-shrink-0 bg-red-50 rounded-2xl flex items-center justify-center border border-red-100">
+      <span className="text-3xl font-bold text-red-600">{bloodGroup}</span>
+    </div>
+    
+    <div className="flex-1">
+      <h1 className="text-2xl font-bold text-gray-900">{recipientName}</h1>
+      <p className="text-gray-500 mt-1 flex items-center gap-2">
+        <FaHospital className="text-gray-400" />
+        {hospitalName}
+      </p>
+    </div>
 
-            <div className="flex flex-wrap gap-2 mt-3">
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusInfo.cls}`}>
-                <FaCheckCircle className="inline mr-1" />
-                {statusInfo.label}
-              </span>
+    {/* Status Badge */}
+    <div className="mt-4 sm:mt-0">
+      <span className={`px-4 py-1.5 rounded-full text-xs font-semibold ${statusInfo.cls}`}>
+        {statusInfo.label}
+      </span>
+    </div>
+  </div>
 
-              <span className="px-3 py-1 rounded-full text-xs bg-white/10 text-white">
-                <FaCalendarAlt className="inline mr-1" />
-                {formatDate(donationDate)}
-              </span>
+  {/* Divider */}
+  <div className="h-px bg-gray-100 my-8" />
 
-              <span className="px-3 py-1 rounded-full text-xs bg-white/10 text-white">
-                <FaClock className="inline mr-1" />
-                {formatTime(donationTime)}
-              </span>
-            </div>
-          </div>
-        </div>
+  {/* Info Grid */}
+  <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+    <div>
+      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Date</p>
+      <p className="text-sm font-semibold text-gray-700">{formatDate(donationDate)}</p>
+    </div>
+    <div>
+      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Time</p>
+      <p className="text-sm font-semibold text-gray-700">{formatTime(donationTime)}</p>
+    </div>
+    <div className="col-span-2 sm:col-span-1">
+      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Location</p>
+      <p className="text-sm font-semibold text-gray-700 truncate">{recipientDistrict}</p>
+    </div>
+  </div>
+</div>
 
-        {/* RECIPIENT */}
-        <DividerLabel label="Recipient Details" />
+      {/* RECIPIENT DETAILS  */}
+      <div className={cardStyle}>
+        <h3 className="text-sm font-bold text-gray-900 mb-6 uppercase tracking-widest">Recipient Information</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <InfoTile icon={<FaMapMarkerAlt />} label="District" value={recipientDistrict} iconBg="bg-red-50" iconColor="text-red-600" />
+          <InfoTile icon={<FaMapMarkerAlt />} label="District" value={recipientDistrict} iconBg="bg-indigo-50" iconColor="text-indigo-600" />
           <InfoTile icon={<FaMap />} label="Upazila" value={recipientUpazila} iconBg="bg-blue-50" iconColor="text-blue-600" />
-          <InfoTile icon={<FaHome />} label="Address" value={fullAddress} iconBg="bg-green-50" iconColor="text-green-600" />
+          <InfoTile icon={<FaHome />} label="Address" value={fullAddress} iconBg="bg-emerald-50" iconColor="text-emerald-600" />
           <InfoTile icon={<FaTint />} label="Blood Group" value={bloodGroup} iconBg="bg-rose-50" iconColor="text-rose-600" />
         </div>
+      </div>
 
-        {/* MESSAGE */}
-        {requestMessage && (
-          <>
-            <DividerLabel label="Message" />
-            <div className="bg-white/80 backdrop-blur border border-gray-100 rounded-2xl p-4 shadow-sm">
-              <p className="text-xs text-gray-400 flex items-center gap-2 mb-2">
-                <FaCommentDots />
-                Request message
-              </p>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                {requestMessage}
-              </p>
-            </div>
-          </>
-        )}
+      {/* MESSAGE SECTION */}
+      {requestMessage && (
+        <div className={`${cardStyle} border-l-4 border-l-[#ff4d4d]`}>
+          <p className="text-[10px] font-bold text-[#ff4d4d] uppercase mb-2 flex items-center gap-2">
+            <FaCommentDots /> Request Message
+          </p>
+          <p className="text-gray-600 leading-relaxed italic">"{requestMessage}"</p>
+        </div>
+      )}
 
-        {/* REQUESTER */}
-        <DividerLabel label="Requester" />
-        <div className="bg-white/80 backdrop-blur border border-gray-100 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
-          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-semibold text-blue-700">
-            {initials(requesterName)}
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-gray-900">{requesterName}</p>
-            <p className="text-sm text-blue-600 truncate">{requesterEmail}</p>
-          </div>
-
-          <div className="text-xs text-gray-400">
-            {formatDate(createdAt)}
+      {/* REQUESTER & DONOR SECTION */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className={cardStyle}>
+          <h4 className="text-xs font-bold text-gray-400 mb-4 uppercase">Requester</h4>
+          <div className="flex items-center gap-4">
+             <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-lg">
+               {initials(requesterName)}
+             </div>
+             <div>
+               <p className="font-bold text-gray-800">{requesterName}</p>
+               <p className="text-xs text-blue-500">{requesterEmail}</p>
+             </div>
           </div>
         </div>
 
-        {/* DONOR */}
-        <DividerLabel label="Donor" />
-        {donorName ? (
-          <div className="bg-white/80 border border-gray-100 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center font-semibold text-green-700">
-              {initials(donorName)}
+        <div className={cardStyle}>
+          <h4 className="text-xs font-bold text-gray-400 mb-4 uppercase">Donor</h4>
+          {donorName ? (
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold shadow-lg">
+                {initials(donorName)}
+              </div>
+              <div>
+                <p className="font-bold text-gray-800">{donorName}</p>
+                <p className="text-xs text-green-600">{donorEmail}</p>
+              </div>
             </div>
-
-            <div>
-              <p className="font-medium text-gray-900">{donorName}</p>
-              <p className="text-sm text-blue-600">{donorEmail}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-gray-50 border border-dashed border-gray-300 rounded-2xl p-5 flex items-center gap-4">
-            <FaQuestionCircle className="text-gray-300 text-2xl" />
-            <div>
-              <p className="text-gray-500 font-medium">No donor assigned yet</p>
-              <p className="text-xs text-gray-400">
-                Donor info will appear after acceptance
-              </p>
-            </div>
-          </div>
-        )}
-
-      
-        
-
+          ) : (
+            <p className="text-sm text-gray-400 py-3">No donor assigned yet.</p>
+          )}
+        </div>
       </div>
+
     </div>
-  );
+  </div>
+);
 };
 
 export default MyDonationDetails;

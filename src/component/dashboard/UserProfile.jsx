@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Card, Input, TextField, Label, Button, Separator, Chip } from "@heroui/react";
+import { Card, Input, TextField, Label, Button, Separator, Chip, } from "@heroui/react";
 import {
   FaSave, FaUser, FaEnvelope,
   FaMapMarkerAlt, FaTint, FaPhone, FaTimes, FaCamera,
@@ -10,6 +10,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { MdBloodtype, MdLocationOn, MdPhone } from "react-icons/md";
 import Image from "next/image";
 import { uploadUserImage } from "@/lib/action/uploadImage";
+import { toast } from "sonner";
 
 function ProfileField({ label, icon: Icon, name, value, onChange, disabled = false, readOnly = false, description }) {
   return (
@@ -96,33 +97,40 @@ export default function UserProfile() {
   };
 
   const handleSave = async () => {
-    setSaving(true);
-    try {
-      let imageUrl = formData.image;
-      if (imageFile) {
-        setImageUploading(true);
-        imageUrl = await uploadToImgBB(imageFile);
-        setImageUploading(false);
-      }
-      await authClient.updateUser({
-        name: formData.name,
-        phone: formData.phone,
-        bloodGroup: formData.bloodGroup,
-        district: formData.district,
-        upazila: formData.upazila,
-        image: imageUrl,
-      });
-      setFormData((prev) => ({ ...prev, image: imageUrl }));
-      setImageFile(null);
-      setImagePreview(null);
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Save failed:", error);
-    } finally {
-      setSaving(false);
+  setSaving(true);
+  try {
+    let imageUrl = formData.image;
+    if (imageFile) {
+      setImageUploading(true);
+      imageUrl = await uploadToImgBB(imageFile);
       setImageUploading(false);
     }
-  };
+    
+    await authClient.updateUser({
+      name: formData.name,
+      phone: formData.phone,
+      bloodGroup: formData.bloodGroup,
+      district: formData.district,
+      upazila: formData.upazila,
+      image: imageUrl,
+    });
+
+   
+    toast.success("Profile updated successfully!"); 
+
+    setFormData((prev) => ({ ...prev, image: imageUrl }));
+    setImageFile(null);
+    setImagePreview(null);
+    setIsEditing(false);
+  } catch (error) {
+    console.error("Save failed:", error);
+   
+    toast.error("Failed to update profile. Please try again."); 
+  } finally {
+    setSaving(false);
+    setImageUploading(false);
+  }
+};
 
   const handleCancel = () => {
     setFormData(user);
@@ -148,198 +156,84 @@ export default function UserProfile() {
 
   return (
    <div className="flex items-center justify-center p-4">
-  <Card className="w-full max-w-xl shadow-xl overflow-hidden rounded-2xl">
-
+  <Card className="w-full max-w-xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden rounded-3xl border border-gray-100">
+    
     {/* ── Gradient banner ──────────────────────────────────────── */}
-   {/* ── Gradient banner ──────────────────────────────────────── */}
-<div className={`h-36 w-full bg-gradient-to-br ${roleBg} relative`}>
-
-  {/* mesh pattern */}
-  <div
-    className="absolute inset-0 opacity-15"
-    style={{
-      backgroundImage: `
-        radial-gradient(circle at 20% 50%, white 1px, transparent 1px),
-        radial-gradient(circle at 80% 20%, white 1px, transparent 1px),
-        radial-gradient(circle at 60% 80%, white 1px, transparent 1px)
-      `,
-      backgroundSize: "30px 30px, 25px 25px, 20px 20px",
-    }}
-  />
-
-  {/* bottom fade */}
-  <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/20 to-transparent" />
-
-  {/*  Banner text — bottom left */}
-  <div className="absolute top-4 left-6">
-    <h1 className="text-white font-extrabold text-xl tracking-tight drop-shadow-md leading-tight flex items-center gap-1">
-     <FaTint className="text-red-500"></FaTint>  Blood Donation
-    </h1>
-    <p className="text-white/70 text-xs font-medium tracking-wide mt-0.5">
-      Save lives · Give blood · Be a hero
-    </p>
+    <div className="h-32 w-full bg-white border-b border-gray-100 flex items-center justify-between px-8 relative">
+  <div>
+    <h1 className="text-xl font-bold text-gray-900 tracking-tight">User Profile</h1>
+    <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-0.5">Manage your personal information</p>
   </div>
 
-  {/* Edit / Save / Cancel — top right */}
-  <div className="absolute top-3 right-3 flex gap-2">
+  <div className="flex gap-2">
     {!isEditing ? (
-      <Button
-        size="sm"
-        onPress={() => setIsEditing(true)}
-        className="bg-white/25 hover:bg-white/40 backdrop-blur-md text-white font-semibold border border-white/40 shadow-sm px-3 rounded-lg"
-        startContent={<BiEditAlt size={14} />}
+      <Button 
+        size="sm" 
+        onPress={() => setIsEditing(true)} 
+        variant="flat" 
+        className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl"
       >
-        Edit Profile
+        <BiEditAlt /> Edit Profile
       </Button>
     ) : (
       <>
-        <Button
-          size="sm"
-          onPress={handleCancel}
-          isDisabled={saving}
-          className="bg-white/25 hover:bg-white/40 backdrop-blur-md text-white border border-white/40 rounded-lg"
-          startContent={<FaTimes size={11} />}
-        >
-          Cancel
-        </Button>
-        <Button
-          size="sm"
-          onPress={handleSave}
-          isLoading={saving}
-          className="bg-white text-gray-900 font-bold shadow-md rounded-lg hover:bg-white/90"
-          startContent={!saving && <FaSave size={11} />}
-        >
-          {imageUploading ? "Uploading..." : saving ? "Saving..." : "Save Changes"}
+        <Button size="sm" onPress={handleCancel} variant="light" className="text-gray-500 rounded-xl">Cancel</Button>
+        <Button size="sm" onPress={handleSave} isLoading={saving} className="bg-gray-900 text-white font-bold rounded-xl shadow-lg">
+          Save Changes
         </Button>
       </>
     )}
   </div>
 </div>
 
-    {/* ── Avatar + name block ───────────────────────────────────── */}
-    <div className="px-6">
-      <div className="flex items-end justify-between -mt-14 mb-4">
-
-        {/* Avatar */}
-        <div className="relative">
-          <div className="w-28 h-28 rounded-full p-1 bg-white shadow-xl">
-            <Image
-              width={104}
-              height={104}
-              src={displayImage}
-              alt={formData.name}
-              className="w-full h-full rounded-full object-cover"
-            />
-          </div>
-
-          {isEditing && (
-            <>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute inset-1 flex flex-col items-center justify-center rounded-full bg-black/55 text-white opacity-0 hover:opacity-100 transition-all duration-200 cursor-pointer"
-              >
-                <FaCamera size={18} />
-                <span className="text-[10px] mt-1 font-semibold tracking-wide">Change</span>
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImagePick}
-              />
-            </>
-          )}
-
-          {imagePreview && (
-            <span className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-blue-600 border-2 border-white flex items-center justify-center shadow-md">
-              <FaCamera size={9} className="text-white" />
-            </span>
-          )}
-        </div>
-
-        {/* Member since — floats to the right, bottom-aligned with avatar */}
-        <div className="mb-1 text-right">
-          <p className="text-[10px] uppercase tracking-widest text-default-400 font-semibold">Member since</p>
-          <p className="text-sm font-bold text-default-700">
-            {new Date(user?.createdAt).toLocaleDateString("en-GB", {
-              day: "numeric", month: "short", year: "numeric",
-            })}
-          </p>
+    {/* ── Avatar + Name Block ───────────────────────────────────── */}
+    <div className="px-8 -mt-12">
+      <div className="relative w-28 h-28 rounded-full p-1 bg-white shadow-md">
+        <Image width={112} height={112} src={displayImage} alt={formData.name} className="w-full h-full rounded-full object-cover" />
+        {isEditing && (
+          <button onClick={() => fileInputRef.current?.click()} className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 text-white opacity-0 hover:opacity-100 transition-opacity">
+            <FaCamera size={20} />
+          </button>
+        )}
+      </div>
+      
+      <div className="mt-4">
+        <h2 className="text-2xl font-bold text-gray-900">{formData.name}</h2>
+        <p className="text-gray-500 text-sm">{formData.email}</p>
+        <div className="flex gap-2 mt-3">
+          <Chip color={roleColor} variant="flat" className="font-medium">{formData.role}</Chip>
+          <Chip color={formData.banned ? "danger" : "success"} variant="dot">{formData.banned ? "Blocked" : "Active"}</Chip>
         </div>
       </div>
-
-      {/* Name / email / chips */}
-      <div className="mb-4">
-        <h2 className="text-2xl font-extrabold text-default-900 leading-tight tracking-tight">
-          {formData.name}
-        </h2>
-        <p className="text-sm text-default-500 mt-0.5 mb-3">{formData.email}</p>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Chip
-            size="sm"
-            variant="flat"
-            color={roleColor}
-            className="capitalize font-semibold px-2"
-          >
-            {formData.role}
-          </Chip>
-          <Chip
-            size="sm"
-            variant="dot"
-            color="success"
-            className="capitalize"
-          >
-            {formData.status ?? "active"}
-          </Chip>
-          {isEditing && (
-            <span className="text-[11px] text-default-400 italic">
-              Hover over photo to change it
-            </span>
-          )}
-        </div>
-      </div>
-
-      <Separator />
     </div>
 
     {/* ── Body ─────────────────────────────────────────────────── */}
-    <Card.Content className="px-6 pt-5 pb-6">
+    <Card.Content className="px-8 pt-8 pb-8">
       {!isEditing ? (
-        // ── Read-only info tiles ────────────────────────────────
-        <div className="grid grid-cols-2 gap-3">
-
-          {/* Blood group gets a special large tile spanning full width at top */}
-          <div className="col-span-2 flex items-center gap-4 bg-gradient-to-r from-red-50 to-rose-50 border border-red-100 rounded-2xl px-5 py-4">
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-              <MdBloodtype size={20} className="text-red-500" />
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="col-span-1 sm:col-span-2 flex items-center gap-4 bg-red-50 p-4 rounded-2xl border border-red-100">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-red-500 text-xl font-bold shadow-sm">{formData.bloodGroup}</div>
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-red-400 font-bold">Blood Group</p>
-              <p className="text-2xl font-extrabold text-red-600 leading-tight">{formData.bloodGroup || "—"}</p>
+              <p className="text-[10px] uppercase font-bold text-red-400 tracking-wider">Blood Group</p>
+              <p className="font-semibold text-gray-800">Your Blood Type</p>
             </div>
           </div>
-
-          <InfoTile icon={FaPhone}      label="Phone"    value={formData.phone}    iconColor="text-blue-500"    bgColor="bg-blue-50"    borderColor="border-blue-100" />
-          <InfoTile icon={FaEnvelope}   label="Email"    value={formData.email}    iconColor="text-purple-500"  bgColor="bg-purple-50"  borderColor="border-purple-100" />
-          <InfoTile icon={MdLocationOn} label="District" value={formData.district} iconColor="text-emerald-500" bgColor="bg-emerald-50" borderColor="border-emerald-100" />
-          <InfoTile icon={MdLocationOn} label="Upazila"  value={formData.upazila}  iconColor="text-teal-500"    bgColor="bg-teal-50"    borderColor="border-teal-100" />
-
+          <InfoTile icon={FaPhone} label="Phone" value={formData.phone} iconColor="text-blue-500" bgColor="bg-blue-50/50" />
+          <InfoTile icon={FaEnvelope} label="Email" value={formData.email} iconColor="text-purple-500" bgColor="bg-purple-50/50" />
+          <InfoTile icon={MdLocationOn} label="District" value={formData.district} iconColor="text-emerald-500" bgColor="bg-emerald-50/50" />
+          <InfoTile icon={MdLocationOn} label="Upazila" value={formData.upazila} iconColor="text-teal-500" bgColor="bg-teal-50/50" />
         </div>
       ) : (
-        // ── Edit form ───────────────────────────────────────────
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <ProfileField label="Full Name"   icon={FaUser}         name="name"       value={formData.name}             onChange={handleChange} disabled={!isEditing} />
-          <ProfileField label="Email"       icon={FaEnvelope}     name="email"      value={formData.email}            readOnly description="Email cannot be changed" />
-          <ProfileField label="Phone"       icon={FaPhone}        name="phone"      value={formData.phone ?? ""}      onChange={handleChange} disabled={!isEditing} />
-          <ProfileField label="Blood Group" icon={FaTint}         name="bloodGroup" value={formData.bloodGroup ?? ""} onChange={handleChange} disabled={!isEditing} />
-          <ProfileField label="District"    icon={FaMapMarkerAlt} name="district"   value={formData.district ?? ""}   onChange={handleChange} disabled={!isEditing} />
-          <ProfileField label="Upazila"     icon={FaMapMarkerAlt} name="upazila"    value={formData.upazila ?? ""}    onChange={handleChange} disabled={!isEditing} />
+          <ProfileField label="Full Name" icon={FaUser} name="name" value={formData.name} onChange={handleChange} />
+          <ProfileField label="Email" icon={FaEnvelope} name="email" value={formData.email} readOnly />
+          <ProfileField label="Phone" icon={FaPhone} name="phone" value={formData.phone || ""} onChange={handleChange} />
+          <ProfileField label="Blood Group" icon={FaTint} name="bloodGroup" value={formData.bloodGroup || ""} onChange={handleChange} />
+          <ProfileField label="District" icon={FaMapMarkerAlt} name="district" value={formData.district || ""} onChange={handleChange} />
+          <ProfileField label="Upazila" icon={FaMapMarkerAlt} name="upazila" value={formData.upazila || ""} onChange={handleChange} />
         </div>
       )}
     </Card.Content>
-
   </Card>
 </div>
   );

@@ -1,32 +1,29 @@
 'use client';
 
-import { useState, useMemo,useTransition } from "react";
+import { useState, useMemo, useTransition } from "react";
 import Image from "next/image";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import { MdAdminPanelSettings, MdBlock, MdCheckCircle } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { updateUserRole } from "@/lib/action/updateUserRole";
-import { updateUserStatus } from "@/lib/action/updateUserStatus";
+import { unblockUser, updateUserStatus } from "@/lib/action/updateUserStatus";
 
 function getInitials(name = "") {
   return name.split(" ").map((w) => w[0]).join("").substring(0, 2).toUpperCase();
 }
 
 const ROLES = ["all", "donor", "volunteer", "admin"];
-const STATUSES = ["all", "active", "blocked"];
+const BANNED_FILTERS = ["all", "active", "blocked"];
 
-export default function UserTable({ users = [], total = 0, onBlock, onUnblock, onMakeVolunteer, onMakeAdmin, onMakeDonor }) {
-  // Modal confirmation states
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-   const [success, setSuccess] = useState(false);
-    const [pendingChange, setPendingChange] = useState(null);
-    const [statusChange, setStatusChange] = useState(null);
+export default function UserTable({ users = [], total = 0 }) {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingChange, setPendingChange] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
- const [isPending, startTransition] = useTransition();
+  const [bannedFilter, setBannedFilter] = useState("all");
+  const [isPending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
@@ -34,50 +31,62 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
         u.name?.toLowerCase().includes(search.toLowerCase()) ||
         u.email?.toLowerCase().includes(search.toLowerCase());
       const matchRole = roleFilter === "all" || u.role === roleFilter;
-      const matchStatus = statusFilter === "all" || u.status === statusFilter;
-      return matchSearch && matchRole && matchStatus;
+      const matchBanned =
+        bannedFilter === "all" ||
+        (bannedFilter === "active" && u.banned === false) ||
+        (bannedFilter === "blocked" && u.banned === true);
+      return matchSearch && matchRole && matchBanned;
     });
-  }, [users, search, roleFilter, statusFilter]);
-   
-  const handleStatusChange = async (userId, newStatus) => {
-      setStatusChange({userId,newStatus})
-      setSuccess(true)  
-    };
-    const confirmStatusChange = () => {
-        if (!statusChange) return;
+  }, [users, search, roleFilter, bannedFilter]);
 
-        startTransition(async () => {
-            try {
-                await updateUserStatus(statusChange.userId, statusChange.newStatus);
-                // Close modal on success
-                setSuccess(false);
-                setStatusChange(null);
-            } catch (error) {
-                console.error("Failed to update user role:", error);
-            }
-        });
-    };
+  // handleBlock
+  const handleBlockUser = (userId) => {
+    startTransition(async () => {
+      try {
+        await updateUserStatus(userId);
+        setOpenMenu(null);
+      } catch (error) {
+        console.error("Failed to block user:", error);
+      }
+    });
+  };
+//handleUnblock
+  const handleUnblockUser = (userId) => {
+    startTransition(async () => {
+      try {
+        await unblockUser(userId);
+        setOpenMenu(null);
+      } catch (error) {
+        console.error("Failed to unblock user:", error);
+      }
+    });
+  };
 
-   const initiateRoleChange = (userId, userName, newRole) => {
-        setPendingChange({ userId, userName, newRole });
-        setIsConfirmOpen(true);
-    };
-   
-    // Executes the Server Action upon confirmation inside a transition context
-    const confirmRoleChange = () => {
-        if (!pendingChange) return;
+  // handle-role-change
+  const initiateRoleChange = (userId, userName, newRole) => {
+    setPendingChange({ userId, userName, newRole });
+    setIsConfirmOpen(true);
+  };
 
-        startTransition(async () => {
-            try {
-                await updateUserRole(pendingChange.userId, pendingChange.newRole);
-                // Close modal on success
-                setIsConfirmOpen(false);
-                setPendingChange(null);
-            } catch (error) {
-                console.error("Failed to update user role:", error);
-            }
-        });
-    };
+  const confirmRoleChange = () => {
+    if (!pendingChange) return;
+    startTransition(async () => {
+      try {
+        await updateUserRole(pendingChange.userId, pendingChange.newRole);
+        setIsConfirmOpen(false);
+        setPendingChange(null);
+        setOpenMenu(null);
+      } catch (error) {
+        console.error("Failed to update user role:", error);
+      }
+    });
+  };
+//cancel-role-change
+  const cancelRoleChange = () => {
+    setIsConfirmOpen(false);
+    setPendingChange(null);
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen" onClick={() => setOpenMenu(null)}>
 
@@ -106,17 +115,21 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
           className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white outline-none cursor-pointer"
         >
           {ROLES.map((r) => (
-            <option key={r} value={r}>{r === "all" ? "All Roles" : r.charAt(0).toUpperCase() + r.slice(1)}</option>
+            <option key={r} value={r}>
+              {r === "all" ? "All Roles" : r.charAt(0).toUpperCase() + r.slice(1)}
+            </option>
           ))}
         </select>
 
         <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          value={bannedFilter}
+          onChange={(e) => setBannedFilter(e.target.value)}
           className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white outline-none cursor-pointer"
         >
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>{s === "all" ? "All Status" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
+          {BANNED_FILTERS.map((s) => (
+            <option key={s} value={s}>
+              {s === "all" ? "All Status" : s.charAt(0).toUpperCase() + s.slice(1)}
+            </option>
           ))}
         </select>
       </div>
@@ -163,22 +176,33 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
 
                   {/* ROLE */}
                   <td className="p-3">
-                    <span className="px-2 py-1 text-xs rounded bg-gray-100 capitalize">{user.role}</span>
+                   <span className={`px-2 py-1 text-xs rounded capitalize ${
+  user.role === "admin"
+    ? "bg-amber-100 text-amber-700"
+    : user.role === "volunteer"
+    ? "bg-green-100 text-green-700"
+    : "bg-gray-100 text-gray-600"
+}`}>
+  {user.role}
+</span>
                   </td>
 
-                  {/* STATUS */}
+                  {/* STATUS — banned field দিয়ে */}
                   <td className="p-3">
                     <span className={`px-2 py-1 text-xs rounded capitalize ${
-                      user.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                      user.banned ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
                     }`}>
-                      {user.status}
+                      {user.banned ? "Blocked" : "Active"}
                     </span>
                   </td>
 
                   {/* ACTION */}
                   <td className="p-1 text-right relative">
                     <button
-                      onClick={(e) => { e.stopPropagation(); setOpenMenu((prev) => (prev === user.id ? null : user.id)); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenu((prev) => (prev === user.id ? null : user.id));
+                      }}
                       className="p-1.5 hover:bg-gray-100 rounded-full transition"
                     >
                       <HiDotsVertical className="text-gray-500" />
@@ -189,26 +213,35 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
                         className="absolute right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 text-xs py-1 w-36"
                         onClick={(e) => e.stopPropagation()}
                       >
+                        {/* STATUS ACTIONS */}
                         <p className="px-3 py-1.5 text-gray-400 font-medium">Status</p>
-                        {user.status === "active" ? (
-                          <button  onClick={() => handleStatusChange(user.id, 'block')} className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 transition">
-                            <MdBlock size={14} /> Block
+                        {user.banned ? (
+                          <button
+                            onClick={() => handleUnblockUser(user.id)}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-green-600 hover:bg-green-50 transition"
+                          >
+                            <MdCheckCircle size={14} /> Unblock
                           </button>
                         ) : (
-                          <button onClick={() => handleStatusChange(user.id, 'active')} className="flex items-center gap-2 w-full px-3 py-2 text-green-600 hover:bg-green-50 transition">
-                            <MdCheckCircle size={14} /> Unblock
+                          <button
+                            onClick={() => handleBlockUser(user.id)}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 transition"
+                          >
+                            <MdBlock size={14} /> Block
                           </button>
                         )}
 
                         <div className="border-t my-1" />
+
+                        {/* ROLE ACTIONS */}
                         <p className="px-3 text-gray-400 font-medium">Role</p>
 
                         {user.role === "donor" && (
                           <>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, 'volunteer')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                            <button onClick={() => initiateRoleChange(user.id, user.name, "volunteer")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
                               <FaHandshakeSimple size={14} /> Volunteer
                             </button>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, 'admin')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                            <button onClick={() => initiateRoleChange(user.id, user.name, "admin")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
                               <MdAdminPanelSettings size={14} /> Make Admin
                             </button>
                           </>
@@ -216,10 +249,10 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
 
                         {user.role === "volunteer" && (
                           <>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, 'donor')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                            <button onClick={() => initiateRoleChange(user.id, user.name, "donor")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
                               <MdAdminPanelSettings size={14} /> Donor
                             </button>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, 'admin')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                            <button onClick={() => initiateRoleChange(user.id, user.name, "admin")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
                               <MdAdminPanelSettings size={14} /> Make Admin
                             </button>
                           </>
@@ -227,10 +260,10 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
 
                         {user.role === "admin" && (
                           <>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, 'donor')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                            <button onClick={() => initiateRoleChange(user.id, user.name, "donor")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
                               <MdAdminPanelSettings size={14} /> Donor
                             </button>
-                            <button onClick={() => initiateRoleChange(user.id, user.name, 'volunteer')} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
+                            <button onClick={() => initiateRoleChange(user.id, user.name, "volunteer")} className="flex items-center gap-2 w-full px-3 py-2 text-black hover:bg-violet-50 transition">
                               <FaHandshakeSimple size={14} /> Volunteer
                             </button>
                           </>
@@ -244,76 +277,43 @@ export default function UserTable({ users = [], total = 0, onBlock, onUnblock, o
           </tbody>
         </table>
       </div>
-       {isConfirmOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
-                    <div className="w-full max-w-sm bg-white border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
-                        <div className="space-y-2">
-                            <h3 className="text-base font-semibold text-red-500">
-                                Confirm Role Change
-                            </h3>
-                            <p className="text-xs text-zinc-800 leading-relaxed">
-                                Are you sure you want to change the role of <span className="text-red-600 font-medium">{pendingChange?.userName}</span> to <span className="text-red-600 font-medium capitalize">{pendingChange?.newRole}</span>? This alters system access and application flow parameters permissions immediately.
-                            </p>
-                        </div>
 
-                        <div className="flex items-center justify-end gap-3 text-xs font-medium">
-                            <button
-                                disabled={isPending}
-                                onClick={() => { setIsConfirmOpen(false); setPendingChange(null); }}
-                                className="px-4 py-2 bg-red-600 text-white hover:text-zinc-200  hover:bg-red-800 border  rounded-md transition-colors disabled:opacity-50"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                disabled={isPending}
-                                onClick={confirmRoleChange}
-                                className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow-lg shadow-indigo-600/10 disabled:opacity-50 min-w-[76px] flex items-center justify-center"
-                            >
-                                {isPending ? (
-                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    'Confirm'
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-       {success && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
-                    <div className="w-full max-w-sm bg-white border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
-                        <div className="space-y-2">
-                            <h3 className="text-base font-semibold text-red-500">
-                                Confirm Status Change
-                            </h3>
-                            <p className="text-xs text-zinc-800 leading-relaxed">
-                                Are you sure you want to change the role of <span className="text-red-600 font-medium">{statusChange?.userName}</span> to <span className="text-red-600 font-medium capitalize">{statusChange?.newStatus}</span>? This alters system access and application flow parameters permissions immediately.
-                            </p>
-                        </div>
-
-                        <div className="flex items-center justify-end gap-3 text-xs font-medium">
-                            <button
-                                disabled={isPending}
-                                onClick={() => { setIsConfirmOpen(false); setPendingChange(null); }}
-                                className="px-4 py-2 bg-red-600 text-white hover:text-zinc-200  hover:bg-red-800 border  rounded-md transition-colors disabled:opacity-50"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                disabled={isPending}
-                                onClick={confirmStatusChange}
-                                className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow-lg shadow-indigo-600/10 disabled:opacity-50 min-w-[76px] flex items-center justify-center"
-                            >
-                                {isPending ? (
-                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    'Confirm'
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+      {/* ROLE CHANGE CONFIRM MODAL */}
+      {isConfirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
+          <div className="w-full max-w-sm bg-white border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-red-500">Confirm Role Change</h3>
+              <p className="text-xs text-zinc-800 leading-relaxed">
+                Are you sure you want to change the role of{" "}
+                <span className="text-red-600 font-medium">{pendingChange?.userName}</span> to{" "}
+                <span className="text-red-600 font-medium capitalize">{pendingChange?.newRole}</span>?
+                This alters system access and permissions immediately.
+              </p>
+            </div>
+            <div className="flex items-center justify-end gap-3 text-xs font-medium">
+              <button
+                disabled={isPending}
+                onClick={cancelRoleChange}
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-800 rounded-md transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isPending}
+                onClick={confirmRoleChange}
+                className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors shadow-lg shadow-indigo-600/10 disabled:opacity-50 min-w-[76px] flex items-center justify-center"
+              >
+                {isPending ? (
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  "Confirm"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

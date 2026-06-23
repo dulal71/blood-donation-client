@@ -1,16 +1,33 @@
 'use server'
 
 import { headers } from "next/headers";
-
-import { revalidatePath } from "next/cache";
 import { auth } from "../auth";
-import { serverMutation } from "../service/post";
+import { revalidatePath } from "next/cache";
 
-export const updateUserStatus=async(id,status)=>{
-const res = serverMutation(`/api/user/${id}`,{status}, 'PATCH')
-if(res.modifiedCount > 0){
-revalidatePath('/dashboard/all-users')
+
+const USERS_PATH = '/dashboard/admin/all-users';
+export const updateUserStatus=async(userId)=>{
+const res = await auth.api.banUser({
+    body: {
+        userId: userId, // required
+},
+    // This endpoint requires session cookies.
+    headers: await headers(),
+});
+if(res){
+    revalidatePath(USERS_PATH)
 }
-
-return res;
+}
+export const unblockUser=async(userId)=>{
+const data = await auth.api.unbanUser({
+    body: {
+        userId: userId, // required
+    },
+    // This endpoint requires session cookies.
+    headers: await headers(),
+});
+if(data){
+    revalidatePath(USERS_PATH)
+}
+console.log("data" ,data);
 }

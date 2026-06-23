@@ -31,6 +31,7 @@ import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import Logo from "./Logo";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 
 
@@ -152,8 +153,8 @@ export default function RegistrationForm() {
 
     const finalSubmittedData = {
       ...formData,
-      role:"donor",
-      status:"active",
+      
+      
       district: selectedDistrictObj ? selectedDistrictObj.name : "",
       upazila: selectedUpazilaObj ? selectedUpazilaObj.name : "",
       image: logoUrl 
@@ -166,9 +167,9 @@ const { data, error } = await authClient.signUp.email({
  
     })
     if(error){
-      alert(error.message || "Something went wrong!");
+      toast.error(error.message || "Something went wrong!");
     }else{
-      alert("Registration successful:");
+      toast.success("Registration successful:");
       router.push(redirectTo)
     }
     }catch(error){

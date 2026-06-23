@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { role } from "better-auth/client";
+
 import { admin } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.MONGODB_URI);
@@ -17,8 +17,6 @@ export const auth = betterAuth({
   }, 
   user:{
     additionalFields:{
-    role:{type: "string", default:"donor"},
-    status:{type: "string", default:"active"},
      phone:{ type: "string", required: false } ,
     bloodGroup: { type: "string", required: false },
    district: { type: "string", required: false },
@@ -26,6 +24,8 @@ export const auth = betterAuth({
 }
   },
    plugins: [
-        admin() 
+        admin({
+          defaultRole:"donor"
+        }) 
     ]
 });

@@ -9,7 +9,7 @@ const allUsersPage =async ({searchParams}) => {
     const params = await searchParams
     
    
-    const data = await getAllUsers(params)
+    const data = await getAllUsers()
     const {users,total} = data
   
     return (

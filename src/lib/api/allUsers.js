@@ -2,16 +2,17 @@
 
 import { headers } from "next/headers";
 import { auth } from "../auth";
+import { getSession } from "./userSession";
 
 
 
 
 
 export const getAllUsers=async()=>{
-    
-// const page = params.page || 1
-// const limit = 10;
-// const offset = (page - 1) * 10
+//   const user = getSession()  
+//  if (user.role !== "admin") {
+//         throw new Error("Unauthorized: Admin only");
+//     }
 const users = await auth.api.listUsers({
     query: {
       

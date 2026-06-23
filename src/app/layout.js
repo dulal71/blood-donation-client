@@ -1,5 +1,6 @@
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,7 +26,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${poppins.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}
+        <Toaster richColors position="top-center" />
+      </body>
     </html>
   );
 }

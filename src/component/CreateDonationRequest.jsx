@@ -6,6 +6,7 @@ import {
   FaUser, FaEnvelope, FaHospital, FaMapMarkerAlt,
   FaTint, FaCalendarAlt, FaClock, FaFileAlt, FaPaperPlane,
   FaHandHoldingMedical,
+  FaTimes,
 } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { districtsData, upazilasData } from "@/data/geoData";
@@ -206,195 +207,92 @@ export default function CreateDonationRequest() {
   }
 
   // ── Form ──────────────────────────────────────────────────────────────────
-  return (
-    <div>
-{/* Title */}
-<div className="mb-8 flex items-start gap-4 rounded-2xl border border-red-100 bg-red-50 p-5">
-  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-    <FaHandHoldingMedical className="text-2xl text-red-600" />
-  </div>
+ 
 
-  <div>
-    <h1 className="text-2xl font-bold text-gray-900">
-      Create Donation Request
-    </h1>
-
-    <p className="mt-2 max-w-2xl text-sm text-gray-600">
-      Fill out the form below with accurate patient and donation details to
-      create a new blood donation request. This information will help eligible
-      donors respond quickly.
-    </p>
-  </div>
-</div>
-{/* Form */}
-<div className="flex items-center justify-center p-4 py-10">
-      <Card className="w-full max-w-2xl shadow-xl rounded-2xl overflow-hidden">
-
-        {/* Banner */}
-        <div className="h-28 w-full bg-gradient-to-br from-red-500 to-rose-600 relative">
-          <div
-            className="absolute inset-0 opacity-15"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 20% 50%, white 1px, transparent 1px),
-                radial-gradient(circle at 80% 20%, white 1px, transparent 1px),
-                radial-gradient(circle at 60% 80%, white 1px, transparent 1px)
-              `,
-              backgroundSize: "30px 30px, 25px 25px, 20px 20px",
-            }}
-          />
-          <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/20 to-transparent" />
-          <div className="absolute bottom-4 left-6">
-            <h1 className="text-white font-extrabold text-xl tracking-tight drop-shadow-md flex items-center gap-2">
-              <FaTint></FaTint>  Blood Donation Request
-            </h1>
-            <p className="text-white/70 text-xs font-medium mt-0.5">
-              Fill in the details below to find a donor
-            </p>
+return (
+  <>
+    {user?.banned ? (
+      <div className="max-w-xl mx-auto py-20 px-4 text-center">
+        <div className="bg-red-50 p-8 rounded-3xl border border-red-100 shadow-sm">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 mx-auto mb-4">
+            <FaTimes size={30} />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900">Access Restricted</h2>
+          <p className="text-gray-600 mt-2">
+            Your account is currently restricted from creating new donation requests due to a violation of our policies.
+          </p>
+        </div>
+      </div>
+    ) : (
+      <div className="max-w-3xl mx-auto py-10 px-4 space-y-8">
+        {/* Title Section */}
+        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
+            <FaHandHoldingMedical size={24} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">Create Donation Request</h1>
+            <p className="text-sm text-gray-500 mt-1">Fill out the details to find a donor.</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <Card.Content className="px-6 py-6 flex flex-col gap-6">
-
-            {/* Requester Info */}
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-default-400 mb-3">
-                Requester Information
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <ReadOnlyField label="Your Name"  value={user?.name  ?? "—"} icon={FaUser} />
-                <ReadOnlyField label="Your Email" value={user?.email ?? "—"} icon={FaEnvelope} />
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Requester Information */}
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Requester Information</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <ReadOnlyField label="Your Name" value={user?.name ?? "—"} icon={FaUser} />
+              <ReadOnlyField label="Your Email" value={user?.email ?? "—"} icon={FaEnvelope} />
             </div>
+          </div>
 
-            <Separator />
-
-            {/* Recipient Info */}
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-default-400 mb-3">
-                Recipient Information
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormInput
-                  label="Recipient Name" name="recipientName" value={form.recipientName}
-                  onChange={handleChange} placeholder="Recipient's full name"
-                  icon={FaUser} required
-                />
-                <FormSelect
-                  label="Blood Group" name="bloodGroup" value={form.bloodGroup}
-                  onChange={handleChange} placeholder="Select blood group"
-                  options={BLOOD_GROUPS.map((b) => ({ value: b, label: b }))}
-                  icon={FaTint} required
-                />
-
-                {/*  District from your JSON */}
-                <FormSelect
-                  label="Recipient District" name="recipientDistrict" value={form.recipientDistrict}
-                  onChange={handleChange} placeholder="Select district"
-                  options={districtOptions}
-                  icon={MdLocationOn} required
-                />
-
-                {/*  Upazila filtered by selected district_id */}
-                <FormSelect
-                  label="Recipient Upazila" name="recipientUpazila" value={form.recipientUpazila}
-                  onChange={handleChange} placeholder={form.recipientDistrict ? "Select upazila" : "Select district first"}
-                  options={upazilaOptions}
-                  icon={FaMapMarkerAlt} required
-                  disabled={!form.recipientDistrict}
-                />
-              </div>
+          {/* Recipient Information */}
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Recipient Information</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormInput label="Recipient Name" name="recipientName" value={form.recipientName} onChange={handleChange} icon={FaUser} required />
+              <FormSelect label="Blood Group" name="bloodGroup" value={form.bloodGroup} onChange={handleChange} options={BLOOD_GROUPS.map((b) => ({ value: b, label: b }))} icon={FaTint} required />
+              <FormSelect label="Recipient District" name="recipientDistrict" value={form.recipientDistrict} onChange={handleChange} options={districtOptions} icon={MdLocationOn} required />
+              <FormSelect label="Recipient Upazila" name="recipientUpazila" value={form.recipientUpazila} onChange={handleChange} options={upazilaOptions} icon={FaMapMarkerAlt} required disabled={!form.recipientDistrict} />
             </div>
+          </div>
 
-            <Separator />
-
-            {/* Hospital */}
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-default-400 mb-3">
-                Hospital & Location
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormInput
-                  label="Hospital Name" name="hospitalName" value={form.hospitalName}
-                  onChange={handleChange} placeholder="e.g. Dhaka Medical College Hospital"
-                  icon={FaHospital} required
-                />
-                <FormInput
-                  label="Full Address" name="fullAddress" value={form.fullAddress}
-                  onChange={handleChange} placeholder="e.g. Zahir Raihan Rd, Dhaka"
-                  icon={FaMapMarkerAlt} required
-                />
-              </div>
+          {/* Hospital & Location */}
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Hospital & Location</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormInput label="Hospital Name" name="hospitalName" value={form.hospitalName} onChange={handleChange} icon={FaHospital} required />
+              <FormInput label="Full Address" name="fullAddress" value={form.fullAddress} onChange={handleChange} icon={FaMapMarkerAlt} required />
             </div>
+          </div>
 
-            <Separator />
-
-            {/* Schedule */}
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-default-400 mb-3">
-                Donation Schedule
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormInput
-                  label="Donation Date" name="donationDate" value={form.donationDate}
-                  onChange={handleChange} type="date" icon={FaCalendarAlt} required
-                />
-                <FormInput
-                  label="Donation Time" name="donationTime" value={form.donationTime}
-                  onChange={handleChange} type="time" icon={FaClock} required
-                />
-              </div>
+          {/* Donation Schedule */}
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Donation Details</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <FormInput label="Donation Date" name="donationDate" value={form.donationDate} onChange={handleChange} type="date" icon={FaCalendarAlt} required />
+              <FormInput label="Donation Time" name="donationTime" value={form.donationTime} onChange={handleChange} type="time" icon={FaClock} required />
             </div>
-
-            <Separator />
-
-            {/* Message */}
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-bold uppercase tracking-widest text-default-400">
-                Request Message <span className="text-red-400">*</span>
-              </label>
-              <div className="relative">
-                <FaFileAlt size={13} className="absolute top-3 left-3 text-default-400 pointer-events-none" />
-                <textarea
-                  name="requestMessage"
-                  value={form.requestMessage}
-                  onChange={handleChange}
-                  rows={4}
-                  required
-                  placeholder="Explain why you need blood (e.g. surgery, accident, medical condition)..."
-                  className="w-full rounded-xl border border-border bg-surface text-sm pl-9 pr-4 py-2.5 resize-none outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-              <p className="text-xs text-default-400">Describe the medical situation in detail to help donors understand urgency.</p>
+            
+            <div className="space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">Request Message</label>
+              <textarea name="requestMessage" value={form.requestMessage} onChange={handleChange} rows={4} required placeholder="Explain your situation..."
+                className="w-full rounded-2xl border border-gray-200 p-4 text-sm outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all"
+              />
             </div>
+          </div>
 
-            {/* Status note */}
-            <div className="flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
-              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-              <p className="text-xs text-amber-700 font-medium">
-                Your request will be created with a <strong>Pending</strong> status and visible to donors immediately.
-              </p>
-            </div>
-
-          </Card.Content>
-
-          {/* Submit */}
-          <Card.Footer className="px-6 pb-6 pt-2">
-            <Button
-              type="submit"
-              isLoading={submitting}
-              className="w-full bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold text-sm py-3 rounded-xl shadow-md hover:opacity-90 transition-opacity"
-              startContent={!submitting && <FaPaperPlane size={14} />}
-            >
-              {submitting ? "Submitting Request..." : "Submit Donation Request"}
-            </Button>
-          </Card.Footer>
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            isLoading={submitting}
+            className="w-full bg-gray-900 text-white font-semibold py-4 rounded-2xl hover:bg-gray-800 transition-all shadow-lg"
+          >
+            {submitting ? "Submitting..." : "Submit Donation Request"}
+          </Button>
         </form>
-
-      </Card>
-    </div>
-    </div>
-    
-  );
+      </div>
+    )}
+  </>
+);
 }
