@@ -3,17 +3,14 @@
 import { headers } from "next/headers";
 import { auth } from "../auth";
 import { getSession } from "./userSession";
-import { serverFetch } from "../service/get";
+import { secureFetch, serverFetch } from "../service/get";
 
 
 
 
 
 export const getAllUsers=async()=>{
-//   const user = getSession()  
-//  if (user.role !== "admin") {
-//         throw new Error("Unauthorized: Admin only");
-//     }
+
 const users = await auth.api.listUsers({
     query: {
       
@@ -30,5 +27,5 @@ return users
 
 
 export const users=async()=>{
-  return serverFetch('/api/user')  
+  return secureFetch('/api/user')  
 }

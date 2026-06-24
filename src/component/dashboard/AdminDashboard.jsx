@@ -1,5 +1,6 @@
 import { getAllUsers } from '@/lib/api/allUsers';
 import { getDonations } from '@/lib/api/dontion';
+import { fundingData } from '@/lib/api/fundingData';
 
 
 import { FaUsers, FaDonate, FaTint } from "react-icons/fa";
@@ -8,11 +9,11 @@ const AdminDashboard = async ({user}) => {
 
   const { users,total } = await getAllUsers();
   const {result:donations} = await getDonations();
-
-
+  const {result :funding}=await fundingData()
+console.log(funding);
+const totalFunding = funding.reduce((sum,fund) => sum + Number(fund.amount) , 0)
   const totalDonations = donations?.length 
-  const funding = 10000;
-
+  
   return (
     <div className=" max-w-7xl mx-auto p-6 space-y-6">
 
@@ -43,7 +44,7 @@ const AdminDashboard = async ({user}) => {
           <FaDonate className="text-amber-600 text-3xl" />
           <div>
             <p className="text-gray-500">Total Funding</p>
-            <h2 className="text-2xl font-bold">${funding}</h2>
+            <h2 className="text-2xl font-bold">${totalFunding}</h2>
           </div>
         </div>
 

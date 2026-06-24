@@ -41,9 +41,14 @@ const user = session?.user
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Donations Requests", href: "/donations-requests" },
-    { name: "Search Donor", href: "/search-donor" },
+   
   ];
-
+if(user){
+   navLinks.push({
+    name: "Fundraising",
+    href: "/funding-page",
+  });
+}
   return (
     <nav className={`sticky top-0 transition-all duration-300 z-50 border-b bg-white border-gray-100 px-4 md:px-[8%] flex items-center ${scrolled ? 'h-[60px] shadow-sm' : 'h-[75px]'}`}>
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
@@ -149,8 +154,8 @@ const user = session?.user
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Link href="/dashboard/organizer" onClick={() => setMobileMenuOpen(false)} className="bg-slate-900 text-white text-xs font-semibold py-3 rounded-xl text-center"><FaThLarge className="inline mr-1" /> Dash</Link>
-                  <Link href={`/dashboard/${user?.role?.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)} className="border border-gray-200 text-gray-700 text-xs font-semibold py-3 rounded-xl text-center"><FaUser className="inline mr-1" /> Profile</Link>
+                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="bg-slate-900 text-white text-xs font-semibold py-3 rounded-xl text-center"><FaThLarge className="inline mr-1" /> Dash</Link>
+                  <Link href={`/dashboard/profile`} onClick={() => setMobileMenuOpen(false)} className="border border-gray-200 text-gray-700 text-xs font-semibold py-3 rounded-xl text-center"><FaUser className="inline mr-1" /> Profile</Link>
                 </div>
               </div>
             ) : (

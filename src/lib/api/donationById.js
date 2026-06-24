@@ -1,7 +1,9 @@
 'use server'
 
-import { serverFetch } from "../service/get"
+import { secureFetch } from "../service/get"
+
+
 
 export const getDonationsById=async(id)=>{
-   return serverFetch(`/api/donationRequest/${id}`) 
+   return secureFetch(`/api/donationRequest/${id}`) 
 }
