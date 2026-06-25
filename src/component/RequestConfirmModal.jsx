@@ -1,20 +1,22 @@
 "use client";
 
+
 import { updateStatus } from "@/lib/action/updateDonation";
-import { Button, Modal, toast } from "@heroui/react";
-import { useState } from "react";
+import { Button, Modal,  } from "@heroui/react";
+
 import { TbDroplet, TbInfoCircle, TbCheck } from "react-icons/tb";
+import { toast } from "sonner";
 
 const RequestConfirmModal = ({ donation,user }) => {
-  console.log(user);
-  const handleConfirm = async () => {
-    try{
-const res = await updateStatus(donation._id,
-  {status: 'inprogress',
+
+  const data = {status: 'inprogress',
    donorId: user.id,
    donorEmail:user.email,
    donorName:user.name
-});
+}
+  const handleConfirm = async () => {
+    try{
+const res = await updateStatus(donation._id,data);
    
     if(res.modifiedCount > 0){
       toast.success("Donation confirmed successfully!");

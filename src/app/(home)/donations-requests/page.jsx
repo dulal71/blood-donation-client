@@ -13,7 +13,7 @@ const DonationRequest =async ({searchParams}) => {
 const {result : donations = [], totalData = 0} =data || {}
 console.log(donations);
     return (
-        <div className="w-8/12 mx-auto">
+        <div className="container  mx-auto px-3 md:px-10">
            <div className="my-8">
         <div className="flex items-center gap-2 mb-1">
           <FaHeartbeat className="text-red-500" size={20} />

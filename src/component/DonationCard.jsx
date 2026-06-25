@@ -37,7 +37,7 @@ export default function DonationCard({ request }) {
   });
 
   return (
-    <article className="group relative bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.12)] overflow-hidden">
+    <div className="group relative bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.12)] overflow-hidden">
 
       {/* Top accent line */}
       <div className="h-[3px] w-full bg-gradient-to-r from-rose-500 to-rose-400" />
@@ -107,7 +107,7 @@ export default function DonationCard({ request }) {
           </Link>
         </div>
       </div>
-    </article>
+    </div>
   );
 }
 

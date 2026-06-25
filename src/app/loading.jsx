@@ -1,17 +1,16 @@
+"use client";
 
-const Loading = () => {
-    return (
-        <div className="loader-container">
-            <div className="loader">
-                {[...Array(5)].map((_, index) => (
-                    <div key={index} className="circle">
-                        <div className="dot"></div>
-                        <div className="outline"></div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
+import Lottie from "lottie-react";
+import loadingAnimation from "../assets/loading.json";
 
-export default Loading; 
+export default function Loading() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Lottie
+        animationData={loadingAnimation}
+        loop
+        className="w-40 h-40"
+      />
+    </div>
+  );
+}
