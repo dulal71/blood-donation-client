@@ -1,3 +1,4 @@
+
 const Loading = () => {
     return (
         <div className="loader-container">
@@ -12,3 +13,5 @@ const Loading = () => {
         </div>
     );
 };
+
+export default Loading; 
