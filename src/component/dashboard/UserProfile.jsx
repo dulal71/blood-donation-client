@@ -155,86 +155,92 @@ export default function UserProfile() {
   const displayImage = imagePreview || formData.image;
 
   return (
-   <div className="flex items-center justify-center p-4">
-  <Card className="w-full max-w-xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden rounded-3xl border border-gray-100">
-    
-    {/* ── Gradient banner ──────────────────────────────────────── */}
-    <div className="h-32 w-full bg-white border-b border-gray-100 flex items-center justify-between px-8 relative">
-  <div>
-    <h1 className="text-xl font-bold text-gray-900 tracking-tight">User Profile</h1>
-    <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-0.5">Manage your personal information</p>
-  </div>
+   <div className="max-w-4xl mx-auto p-8 bg-white min-h-screen">
+      {/* ── Header Section ── */}
+      <div className="flex justify-between flex-col md:flex-row items-start mb-10">
+        <div>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+            PROFILES / {formData.name?.toUpperCase()}
+          </p>
+          <h1 className="text-3xl font-bold text-gray-900">User Profile</h1>
+        </div>
 
-  <div className="flex gap-2">
-    {!isEditing ? (
-      <Button 
-        size="sm" 
-        onPress={() => setIsEditing(true)} 
-        variant="flat" 
-        className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl"
-      >
-        <BiEditAlt /> Edit Profile
-      </Button>
-    ) : (
-      <>
-        <Button size="sm" onPress={handleCancel} variant="light" className="text-gray-500 rounded-xl">Cancel</Button>
-        <Button size="sm" onPress={handleSave} isLoading={saving} className="bg-gray-900 text-white font-bold rounded-xl shadow-lg">
-          Save Changes
-        </Button>
-      </>
-    )}
-  </div>
-</div>
-
-    {/* ── Avatar + Name Block ───────────────────────────────────── */}
-    <div className="px-8 -mt-12">
-      <div className="relative w-28 h-28 rounded-full p-1 bg-white shadow-md">
-        <Image width={112} height={112} src={displayImage} alt={formData.name} className="w-full h-full rounded-full object-cover" />
-        {isEditing && (
-          <button onClick={() => fileInputRef.current?.click()} className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 text-white opacity-0 hover:opacity-100 transition-opacity">
-            <FaCamera size={20} />
+        {/* Edit Button */}
+        {!isEditing ? (
+          <button 
+            onClick={() => setIsEditing(true)} 
+            className="text-blue-600 font-medium flex items-center gap-2 hover:underline cursor-pointer"
+          >
+            <BiEditAlt /> Edit Profile
           </button>
+        ) : (
+          <div className="flex gap-3">
+            <button onClick={handleCancel} className="text-gray-500 font-medium px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">Cancel</button>
+            <button onClick={handleSave} className="bg-gray-900 text-white font-bold px-6 py-2 rounded-lg shadow-lg cursor-pointer">Save Changes</button>
+          </div>
         )}
       </div>
-      
-      <div className="mt-4">
-        <h2 className="text-2xl font-bold text-gray-900">{formData.name}</h2>
-        <p className="text-gray-500 text-sm">{formData.email}</p>
-        <div className="flex gap-2 mt-3">
-          <Chip color={roleColor} variant="flat" className="font-medium">{formData.role}</Chip>
-          <Chip color={formData.status} variant="dot">{formData.status }</Chip>
+
+      {/* ── Avatar + Name Block ── */}
+      <div className="flex flex-col md:flex-row items-center gap-6 mb-12">
+        <div className="relative w-28 h-28 rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <Image width={112} height={112} src={displayImage} alt={formData.name} className="w-full h-full object-cover" />
+          {isEditing && (
+            <button onClick={() => fileInputRef.current?.click()} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white">
+              <FaCamera size={20} />
+            </button>
+          )}
+        </div>
+        
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">{formData.name}</h2>
+          <p className="text-gray-600 font-medium mb-2">{formData.role || "Senior Strategy Consultant"}</p>
+          <div className="flex gap-3 items-center">
+            <Chip color={formData.status === 'active' ? 'success' : 'danger'} variant="flat" size="sm">{formData.status}</Chip>
+            <span className="text-sm text-gray-500">Joined Oct 2021</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* ── Body ─────────────────────────────────────────────────── */}
-    <Card.Content className="px-8 pt-8 pb-8">
+      {/* ── Body Content ── */}
       {!isEditing ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="col-span-1 sm:col-span-2 flex items-center gap-4 bg-red-50 p-4 rounded-2xl border border-red-100">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-red-500 text-xl font-bold shadow-sm">{formData.bloodGroup}</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+          {/* Contact Information */}
+          <div className="space-y-6">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Contact Information</h3>
             <div>
-              <p className="text-[10px] uppercase font-bold text-red-400 tracking-wider">Blood Group</p>
-              <p className="font-semibold text-gray-800">Your Blood Type</p>
+              <p className="text-xs text-gray-400">Email</p>
+              <p className="text-sm font-semibold text-gray-900">{formData.email}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Phone</p>
+              <p className="text-sm font-semibold text-gray-900">{formData.phone}</p>
             </div>
           </div>
-          <InfoTile icon={FaPhone} label="Phone" value={formData.phone} iconColor="text-blue-500" bgColor="bg-blue-50/50" />
-          <InfoTile icon={FaEnvelope} label="Email" value={formData.email} iconColor="text-purple-500" bgColor="bg-purple-50/50" />
-          <InfoTile icon={MdLocationOn} label="District" value={formData.district} iconColor="text-emerald-500" bgColor="bg-emerald-50/50" />
-          <InfoTile icon={MdLocationOn} label="Upazila" value={formData.upazila} iconColor="text-teal-500" bgColor="bg-teal-50/50" />
+
+          {/* Professional Details */}
+          <div className="space-y-6">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Professional Details</h3>
+            <div>
+              <p className="text-xs text-gray-400">Address</p>
+              <p className="text-sm font-semibold text-gray-900">{formData.district}, {formData.upazila}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Blood Group</p>
+              <p className="text-sm font-bold text-red-600">{formData.bloodGroup}</p>
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <ProfileField label="Full Name" icon={FaUser} name="name" value={formData.name} onChange={handleChange} />
-          <ProfileField label="Email" icon={FaEnvelope} name="email" value={formData.email} readOnly />
-          <ProfileField label="Phone" icon={FaPhone} name="phone" value={formData.phone || ""} onChange={handleChange} />
-          <ProfileField label="Blood Group" icon={FaTint} name="bloodGroup" value={formData.bloodGroup || ""} onChange={handleChange} />
-          <ProfileField label="District" icon={FaMapMarkerAlt} name="district" value={formData.district || ""} onChange={handleChange} />
-          <ProfileField label="Upazila" icon={FaMapMarkerAlt} name="upazila" value={formData.upazila || ""} onChange={handleChange} />
+        /* Edit Form */
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+          <ProfileField label="Full Name" name="name" value={formData.name} onChange={handleChange} />
+          <ProfileField label="Phone" name="phone" value={formData.phone} onChange={handleChange} />
+          <ProfileField label="District" name="district" value={formData.district} onChange={handleChange} />
+          <ProfileField label="Upazila" name="upazila" value={formData.upazila} onChange={handleChange} />
+          <ProfileField label="Blood Group" name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} />
         </div>
       )}
-    </Card.Content>
-  </Card>
-</div>
+    </div>
   );
 }

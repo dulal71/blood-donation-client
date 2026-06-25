@@ -113,7 +113,7 @@ const navItems=userNavLinks[user?.role || 'donor']
         </aside>
        {/* Mobile and md Screen sidebar */}
         <Drawer>
-          <div className="lg:hidden z-30 w-full border-b border-zinc-200 bg-white/90 backdrop-blur-md py-3 px-2">
+          <div className="lg:hidden z-30 w-full rounded-3xl md:rounded-none border-b border-zinc-200 bg-white/90 backdrop-blur-md py-3 px-2">
  <Button className="lg:hidden rounded-none " variant="ghost" >
         <IoMenuSharp size={50} />
         Menu
