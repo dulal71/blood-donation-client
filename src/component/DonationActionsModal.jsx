@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { FiCheckCircle, FiEdit2, FiEye, FiMail, FiTrash2, FiUser, FiX } from "react-icons/fi";
+import { toast } from "sonner";
 
 const DonationActionsModal = ({donation}) => {
  // handle modified status
@@ -31,12 +32,12 @@ const DonationActionsModal = ({donation}) => {
  const res = await deleteDonation(donation._id);
     
      if(res.deletedCount >  0){
-       alert("Donation Delete successfully!");
+       toast.success("Donation Delete successfully!");
      }else {
-       alert("Something went wrong. Please try again.");
+       toast.error("Something went wrong. Please try again.");
      }
      }catch(error){
- alert("Failed to confirm donation.");
+ toast.error("Failed to confirm donation.");
      console.error(error);
      }
    }
