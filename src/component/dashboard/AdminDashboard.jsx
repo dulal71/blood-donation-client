@@ -4,6 +4,7 @@ import { fundingData } from '@/lib/api/fundingData';
 
 
 import { FaUsers, FaDonate, FaTint } from "react-icons/fa";
+import Rechart from './Rechart';
 
 const AdminDashboard = async ({user}) => {
 
@@ -57,7 +58,9 @@ const AdminDashboard = async ({user}) => {
             <h2 className="text-2xl font-bold">{totalDonations}</h2>
           </div>
         </div>
-
+<div>
+  <Rechart></Rechart>
+</div>
       </div>
     </div>
   );
