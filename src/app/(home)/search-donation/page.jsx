@@ -4,19 +4,19 @@ import SearchDonation from '@/component/SearchDonation';
 import { getDonations } from '@/lib/api/dontion';
 
 import DonationRequestContainer from '@/component/DonationRequestContainer';
-import { serialize } from 'mongodb';
+
 
 
 const SearchPage =async ({searchParams}) => {
   const query = await searchParams
-  console.log(query);
+ 
   const page = query.page
   const search = query.search;
   const district = query.district;
   const upazila=query.upazila;
-  const  bloodGroup=query. bloodGroup
- const {result:donations ,totalData} =await getDonations('pending',page,search,district,upazila,bloodGroup)
-console.log(donations);
+  const  bloodGroup=query.bloodGroup
+ const {result:donations =[] ,totalData = 0} =await getDonations('pending',page,search,district,upazila,bloodGroup)
+console.log(bloodGroup);
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-6">
       <div className="max-w-7xl mx-auto">
@@ -28,7 +28,7 @@ console.log(donations);
         </div>
 
         {/* Search & Filter Section */}
-       <SearchDonation></SearchDonation>
+       <SearchDonation query={query}></SearchDonation>
       <div className='mt-10'>
        <DonationRequestContainer donations={donations} totalData={totalData}></DonationRequestContainer>
       </div>

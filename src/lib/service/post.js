@@ -20,7 +20,7 @@ const res = await fetch(`${baseUrl}${path}`,{
   method:method ,
   headers:{
     'Content-Type':'application/json',
-    ... await authHeader
+    ... await authHeader()
   } ,
   body:JSON.stringify(data)
 })

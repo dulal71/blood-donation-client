@@ -1,10 +1,11 @@
 'use server'
 
 import { cache } from "react"
-import { secureFetch } from "../service/get"
+import { serverFetch } from "../service/get"
+
 
 export const fundingData = async(page = 1)=>{
-    return await secureFetch(`/api/funding?page=${page}`,{
+    return await serverFetch(`/api/funding?page=${page}`,{
           cache: 'no-store'
     })
 }

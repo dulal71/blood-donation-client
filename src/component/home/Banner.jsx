@@ -1,14 +1,17 @@
+import { getDonations } from '@/lib/api/dontion';
+import { fundingData } from '@/lib/api/fundingData';
 import Link from 'next/link';
 import React from 'react';
 
 
-const DonationDashboard = () => {
-
+const DonationDashboard =async () => {
+ const {totalData = 0} =await getDonations()
+   const {totalAmount}=await fundingData()
 
   const stats = [
     { title: "Total Users", value: "12,450", description: "Active members this month" },
-    { title: "Total Funding", value: "$45,200", description: "Raised for the cause" },
-    { title: "Total Donation", value: "37,350", description: "Donations documented" },
+    { title: "Total Funding -$", value: totalAmount, description: "Raised for the cause" },
+    { title: "Total Donation", value: totalData, description: "Donations documented" },
   ];
 
   return (

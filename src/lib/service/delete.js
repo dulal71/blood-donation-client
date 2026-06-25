@@ -9,7 +9,7 @@ export const serverDelete=async(path)=>{
         method:"DELETE",
         headers:{
             'Content-Type':'application/json',
-            ... await authHeader
+            ... await authHeader()
           } ,
     })
     return res.json()

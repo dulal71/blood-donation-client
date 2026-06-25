@@ -16,7 +16,8 @@ const MyDonationRequest =async ({searchParams}) => {
   
   const data = await getDonationByUserId(user?.id,status,page)
    const {result: donations = [],totalData = 0} =data || {}
-    return (
+   console.log(donations);
+   return (
         <div className="min-h-screen bg-gray-50 px-4 py-10 md:px-8">
 
       {/* ── Title Section / Filter ─────────────────────────────────────────────── */}
