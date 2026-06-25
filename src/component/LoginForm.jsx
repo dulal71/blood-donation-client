@@ -93,7 +93,7 @@ if(authError){
             </div>
           </TextField>
 
-          <Button type="submit" className="w-full bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl h-12 transition-all shadow-md shadow-red-500/20">
+          <Button type="submit" className="w-full cursor-pointer bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl h-12 transition-all shadow-md shadow-red-500/20">
             Sign In
           </Button>
   {/* Navigation Option */}
