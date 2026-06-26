@@ -94,7 +94,7 @@ const DonationEditForm = ({ donation, user }) => {
 
   // ── Form ──────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-7xl mx-auto py-10 p-0 md:px-4">
+    <div className=" w-full md:max-w-4xl mx-auto py-10 px-0 space-y-8 md:px-4">
   <Card className="w-full shadow-lg rounded-3xl border border-gray-100 overflow-hidden">
     
     {/* Clean Header */}
@@ -103,8 +103,8 @@ const DonationEditForm = ({ donation, user }) => {
       <p className="text-sm text-gray-500 mt-1">Update hospital & schedule details below</p>
     </div>
 
-    <form onSubmit={handleSubmit}>
-      <div className=" p-4 md:p-8 space-y-8 bg-gray-50/50">
+    <form onSubmit={handleSubmit} className="space-y-6">
+
         
         {/* Section: Requester Info */}
         <div className="bg-white p-2 md:p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -147,7 +147,7 @@ const DonationEditForm = ({ donation, user }) => {
           <p className="text-sm text-blue-800">Only Hospital, Address, Date & Time can be updated.</p>
         </div>
 
-      </div>
+    
 
       {/* Footer Button */}
       <div className="p-8 bg-white border-t border-gray-100">

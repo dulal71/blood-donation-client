@@ -37,7 +37,6 @@ const Funding = async ({ searchParams }) => {
             <tr>
               <th className="p-4 text-sm font-semibold text-gray-700">Donor Name</th>
               <th className="p-4 text-sm font-semibold text-gray-700">Amount</th>
-              <th className="p-4 text-sm font-semibold text-gray-700">Date</th>
               <th className="p-4 text-sm font-semibold text-gray-700">Status</th>
             </tr>
           </thead>
@@ -51,7 +50,6 @@ const Funding = async ({ searchParams }) => {
                   <span className="font-medium text-gray-700">{fund.name}</span>
                 </td>
                 <td className="p-4 font-bold text-gray-900 text-sm whitespace-nowrap">${fund.amount}</td>
-                <td className="p-4 text-gray-500 text-sm whitespace-nowrap">{fund.date}</td>
                 <td className="p-4 whitespace-nowrap">
                   <span className={`px-2 py-1 rounded text-xs font-semibold inline-block ${
                     fund.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'
@@ -65,7 +63,7 @@ const Funding = async ({ searchParams }) => {
         </table>
       </div>
 
-      {/* ✅ Pagination — table card-এর ভেতরে রাখুন */}
+      {/* Pagination — table card-এর ভেতরে রাখুন */}
       <div className="p-4 border-t flex justify-center items-center">
         <PaginationWithEllipsis totalData={totalFunding} />
       </div>

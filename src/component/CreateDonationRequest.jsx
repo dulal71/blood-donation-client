@@ -224,7 +224,7 @@ return (
         </div>
       </div>
     ) : (
-      <div className="max-w-7xl mx-auto py-10 px-2 md:px-4 space-y-8">
+      <div className=" w-full  md:max-w-4xl mx-auto py-10 px-1 md:px-4 space-y-8">
         {/* Title Section */}
         <div className="bg-white p-2 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
           <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
