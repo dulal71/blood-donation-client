@@ -143,21 +143,29 @@ export default function UserProfile() {
     return <p className="text-center py-10 text-default-400">Loading profile...</p>;
   }
 
-  const roleColor =
-    formData.role === "admin" ? "danger" :
-    formData.role === "donor" ? "success" : "warning";
+ const roleColor =
+  formData.role === "admin" 
+    ? "bg-amber-500/10 text-amber-700" 
+    : formData.role === "donor" 
+    ? "bg-emerald-500 text-white" 
+    : "bg-orange-500 text-white";
 
-  const roleBg =
-    formData.role === "admin" ? "from-red-500 to-rose-600" :
-    formData.role === "donor" ? "from-emerald-500 to-green-600" :
-    "from-amber-500 to-orange-500";
+ 
 
   const displayImage = imagePreview || formData.image;
 
   return (
-   <div className="max-w-4xl mx-auto p-8 bg-white min-h-screen">
+   <div className=" w-full md:max-w-4xl mx-auto  p-2 md:p-8 bg-white shadow">
       {/* ── Header Section ── */}
       <div className="flex justify-between flex-col md:flex-row items-start mb-10">
+        {/* Hidden file input for image upload */}
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        className="hidden" 
+        accept="image/*" 
+        onChange={handleImagePick} 
+      />
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
             PROFILES / {formData.name?.toUpperCase()}
@@ -174,7 +182,7 @@ export default function UserProfile() {
             <BiEditAlt /> Edit Profile
           </button>
         ) : (
-          <div className="flex gap-3">
+          <div className="flex flex-col-reverse md:flex-row gap-3">
             <button onClick={handleCancel} className="text-gray-500 font-medium px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">Cancel</button>
             <button onClick={handleSave} className="bg-gray-900 text-white font-bold px-6 py-2 rounded-lg shadow-lg cursor-pointer">Save Changes</button>
           </div>
@@ -194,8 +202,10 @@ export default function UserProfile() {
         
         <div>
           <h2 className="text-2xl font-bold text-gray-900">{formData.name}</h2>
-          <p className="text-gray-600 font-medium mb-2">{formData.role || "Senior Strategy Consultant"}</p>
-          <div className="flex gap-3 items-center">
+<span className={`px-3 py-1  rounded-full text-xs font-bold ${roleColor}`}>
+  {formData.role.toUpperCase()}
+</span>
+          <div className="flex gap-3 mt-1 items-center">
             <Chip color={formData.status === 'active' ? 'success' : 'danger'} variant="flat" size="sm">{formData.status}</Chip>
 
           </div>
@@ -233,7 +243,7 @@ export default function UserProfile() {
         </div>
       ) : (
         /* Edit Form */
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-gray-50  p-2 md:p-6 rounded-2xl border border-gray-100">
           <ProfileField label="Full Name" name="name" value={formData.name} onChange={handleChange} />
           <ProfileField label="Phone" name="phone" value={formData.phone} onChange={handleChange} />
           <ProfileField label="District" name="district" value={formData.district} onChange={handleChange} />
