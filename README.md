@@ -2,13 +2,13 @@
 
 ## 🌐 Live Website
 
-🔗 **Live Site:** [Add Your Live Site URL Here]
+🔗 **Live Site:https://blood-donation-client-pi.vercel.app/
 
 ## 💻 GitHub Repositories
 
-🔹 **Client Repository:** [Add Client Repository URL]
+🔹 **Client Repository:https://github.com/dulal71/blood-donation-client
 
-🔹 **Server Repository:** [Add Server Repository URL]
+🔹 **Server Repository:https://github.com/dulal71/blood-donation-server
 
 ---
 
