@@ -29,7 +29,7 @@ export default function Features() {
     <section className="bg-gray-50 py-20 px-4">
       <div className="max-w-6xl mx-auto text-center">
         {/* Title */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Building Bridges, Saving Lives</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Building <span className="text-red-700">Bridges,</span> Saving Lives</h2>
         <p className="text-gray-500 max-w-2xl mx-auto mb-16">
           Blood Bridge is a 100% free platform dedicated to making blood donation accessible, safe, and community-focused.
         </p>

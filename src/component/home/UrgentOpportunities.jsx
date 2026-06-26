@@ -40,7 +40,7 @@ export default function UrgentOpportunities() {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-end mb-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Urgent Bridge Opportunities</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Urgent  <span className="text-red-700">Bridges,</span> Opportunities</h2>
             <p className="text-gray-500 text-sm">Real-time alerts for critical blood types in your area</p>
           </div>
           <button className="text-sm font-medium text-gray-700 flex items-center gap-1 hover:underline">
