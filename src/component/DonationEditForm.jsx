@@ -94,7 +94,7 @@ const DonationEditForm = ({ donation, user }) => {
 
   // ── Form ──────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-7xl mx-auto py-10 p-2 md:px-4">
+    <div className="max-w-7xl mx-auto py-10 p-0 md:px-4">
   <Card className="w-full shadow-lg rounded-3xl border border-gray-100 overflow-hidden">
     
     {/* Clean Header */}

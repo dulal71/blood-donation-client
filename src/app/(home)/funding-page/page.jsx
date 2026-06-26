@@ -14,50 +14,46 @@ const Funding = async ({ searchParams }) => {
   const { result: funding, totalFunding } = await fundingData(page);
 
   return (
-    <div className="max-w-6xl min-h-screen mx-auto p-4 md:p-6 overflow-x-hidden">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b pb-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-            Blood Donation Funding
-          </h1>
-          <p className="text-gray-500 max-w-lg">
-            Every contribution saves lives. View our recent donor records and join the mission.
-          </p>
-        </div>
-        <div className="flex-shrink-0">
-          <FundingCheckoutModal />
-        </div>
-      </div>
+ 
+<div className="w-full min-h-screen px-4 md:px-6 py-4 md:py-6">
+  <div className="max-w-6xl mx-auto">
 
-      {/* Table Container - overflow-hidden নিশ্চিত করবে যেন কিছু বাইরে না যায় */}
-      <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-        {/* table-fixed ব্যবহার করা হয়েছে যেন টেবিল কন্টেইনারের বাইরে না যায় */}
-        <table className="w-full table-fixed text-left border-collapse">
+    {/* Header */}
+    <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b pb-6">
+      <div className="space-y-1">
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Blood Donation Funding</h1>
+        <p className="text-gray-500 max-w-lg">Every contribution saves lives. View our recent donor records and join the mission.</p>
+      </div>
+      <div className="flex-shrink-0">
+        <FundingCheckoutModal />
+      </div>
+    </div>
+
+    {/* Table Container */}
+    <div className="bg-white rounded-lg shadow border border-gray-200">
+      <div className="overflow-x-auto w-full">
+        <table className="w-full text-left border-collapse min-w-[600px]">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="p-4 text-sm font-semibold text-gray-700">Donor Name</th>
+              <th className="p-4 text-sm font-semibold text-gray-700">Amount</th>
+              <th className="p-4 text-sm font-semibold text-gray-700">Date</th>
+              <th className="p-4 text-sm font-semibold text-gray-700">Status</th>
+            </tr>
+          </thead>
           <tbody className="divide-y divide-gray-100">
             {funding.map((fund) => (
               <tr key={fund._id} className="hover:bg-gray-50 transition">
-                {/* Name: ফ্লেক্সিবল উইডথ কিন্তু truncate করা */}
-                <td className="p-3 md:p-4 truncate flex items-center gap-3">
+                <td className="p-4 flex items-center gap-3 whitespace-nowrap">
                   <div className="w-8 h-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
                     {getInitials(fund.name)}
                   </div>
-                  <span className="font-medium text-gray-700 truncate">{fund.name}</span>
+                  <span className="font-medium text-gray-700">{fund.name}</span>
                 </td>
-
-                {/* Amount: ছোট উইডথ */}
-                <td className="p-3 md:p-4 font-bold text-gray-900 text-sm truncate">
-                  ${fund.amount}
-                </td>
-
-                {/* Date: লুকানো মোবাইল ভিউতে বা ছোট রাখা */}
-                <td className="p-3 md:p-4 text-gray-500 text-xs md:text-sm hidden md:table-cell">
-                  {fund.date}
-                </td>
-
-                {/* Status: ছোট রাখা */}
-                <td className="p-3 md:p-4">
-                  <span className={`px-2 py-1 rounded text-[10px] md:text-xs font-semibold truncate block w-fit ${
+                <td className="p-4 font-bold text-gray-900 text-sm whitespace-nowrap">${fund.amount}</td>
+                <td className="p-4 text-gray-500 text-sm whitespace-nowrap">{fund.date}</td>
+                <td className="p-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 rounded text-xs font-semibold inline-block ${
                     fund.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'
                   }`}>
                     {fund.status}
@@ -67,13 +63,16 @@ const Funding = async ({ searchParams }) => {
             ))}
           </tbody>
         </table>
+      </div>
 
-        {/* Pagination Footer */}
-        <div className="p-4 border-t flex justify-center items-center">
-          <PaginationWithEllipsis totalData={totalFunding} />
-        </div>
+      {/* ✅ Pagination — table card-এর ভেতরে রাখুন */}
+      <div className="p-4 border-t flex justify-center items-center">
+        <PaginationWithEllipsis totalData={totalFunding} />
       </div>
     </div>
+
+  </div>
+</div>
   );
 };
 
