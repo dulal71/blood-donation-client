@@ -3,64 +3,68 @@ import { fundingData } from '@/lib/api/fundingData';
 import Link from 'next/link';
 import React from 'react';
 
-
-const DonationDashboard =async () => {
- const {totalData = 0} =await getDonations()
-   const {totalAmount}=await fundingData()
+const DonationDashboard = async () => {
+  const { totalData = 0 } = await getDonations();
+  const { totalAmount } = await fundingData();
 
   const stats = [
-    { title: "Total Users", value: "12,450", description: "Active members this month" },
-    { title: "Total Funding -$", value: totalAmount, description: "Raised for the cause" },
-    { title: "Total Donation", value: totalData, description: "Donations documented" },
+    { title: "Active Donors", value: "12,450", description: "Community members this month" },
+    { title: "Funding Raised", value: `$${totalAmount}`, description: "Raised for the cause" },
+    { title: "Total Donations", value: totalData, description: "Donations documented" },
   ];
 
   return (
-    <section className="bg-white py-20 px-6">
-      <div className="max-w-4xl mx-auto text-center">
+    <section className="relative w-full py-20 px-6 bg-gray-900">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ backgroundImage: "url('/banner-image.png')" }}
+      >
+        <div className="absolute inset-0 bg-black/60"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-start text-white">
         
-        {/* Banner Text Section */}
-        <div className="flex flex-col items-center">
-          <span className="inline-block bg-red-50 text-red-600 text-xs font-bold px-3 py-1 rounded-full mb-6 uppercase tracking-wider">
+        {/* Banner Content */}
+        <div className="max-w-2xl">
+          <span className="inline-block bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-6 uppercase tracking-wider">
             Urgent Need for O-
           </span>
           
-          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
-            Every Drop is a <span className="text-red-600">Hero's Gift</span>
+          <h1 className="text-3xl md:text-6xl font-extrabold mb-6 leading-tight">
+            The Bridge Between <span className="text-red-500">Hope and Life</span>
           </h1>
           
-          <p className="text-lg text-gray-600 mb-10 max-w-2xl leading-relaxed">
-            Join the thousands saving lives every day. Find a donation center near you and become a lifeline for someone in need.
+          <p className="text-lg text-gray-200 mb-10 leading-relaxed">
+            Blood Bridge connects generous donors with those in critical need. As a local, community-driven platform, we ensure every drop becomes a lifeline for your neighbors.
           </p>
           
-          {/* Action Buttons with Navigation */}
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap gap-4">
             <Link
-             href={'/registration'}
-              className="bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200 transition-all text-white font-semibold py-3 px-8 rounded-lg"
+              href={'/registration'}
+              className="bg-red-600 hover:bg-red-700 transition-all text-white font-semibold py-3 px-8 rounded-lg"
             >
-              Join as a donor
+              JOIN AS A DONOR
             </Link>
             <Link
-            href={'/search-donation'}
-             
+              href={'/search-donation'}
               className="shimmer-btn"
             >
-              Search Donors
+              SEARCH DONORS
             </Link>
           </div>
         </div>
 
-        {/* Stats Cards Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
+        {/* Stats Cards Section - Positioned relative to banner */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow text-center">
-              <h3 className="text-gray-500 font-medium mb-1">{stat.title}</h3>
-              <p className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</p>
+            <div key={index} className="bg-white p-8 rounded-2xl shadow-lg text-center text-gray-900">
+              <h3 className="text-gray-500 font-medium mb-1 uppercase text-xs tracking-widest">{stat.title}</h3>
+              <p className="text-4xl font-bold mb-2">{stat.value}</p>
               <p className="text-sm text-gray-400">{stat.description}</p>
             </div>
           ))}
         </div>
-        
       </div>
     </section>
   );

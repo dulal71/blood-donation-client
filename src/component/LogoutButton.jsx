@@ -3,6 +3,7 @@
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { FaSignOutAlt } from "react-icons/fa";
+import { toast } from "sonner";
 
 const LogoutButton = ({setDesktopDropdownOpen = null}) => {
     const router = useRouter()
@@ -15,7 +16,7 @@ const LogoutButton = ({setDesktopDropdownOpen = null}) => {
         setDropdownOpen(false);
       }
       
-      alert("Logged Out! (Design Only)");
+      toast.success("Logged Out! ");
       router.push('/login');
     } catch (error) {
       console.error("Logout failed:", error);
