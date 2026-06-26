@@ -94,20 +94,20 @@ const DonationEditForm = ({ donation, user }) => {
 
   // ── Form ──────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
+    <div className="max-w-7xl mx-auto py-10 p-2 md:px-4">
   <Card className="w-full shadow-lg rounded-3xl border border-gray-100 overflow-hidden">
     
     {/* Clean Header */}
-    <div className="bg-white px-8 pt-8 pb-4 border-b border-gray-100">
+    <div className="bg-white p-2 md:px-8 pt-8 pb-4 border-b border-gray-100">
       <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Edit Request</h1>
       <p className="text-sm text-gray-500 mt-1">Update hospital & schedule details below</p>
     </div>
 
     <form onSubmit={handleSubmit}>
-      <div className="p-8 space-y-8 bg-gray-50/50">
+      <div className=" p-4 md:p-8 space-y-8 bg-gray-50/50">
         
         {/* Section: Requester Info */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div className="bg-white p-2 md:p-6 rounded-2xl border border-gray-100 shadow-sm">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-5">Requester Information</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InfoItem label="Your Name" value={user?.name} icon={FaUser} />
@@ -116,7 +116,7 @@ const DonationEditForm = ({ donation, user }) => {
         </div>
 
         {/* Section: Recipient Info */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div className="bg-white p-2 md:p-6 rounded-2xl border border-gray-100 shadow-sm">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-5">Recipient Information</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InfoItem label="Recipient Name" value={donation?.recipientName} icon={FaUser} />
@@ -127,7 +127,7 @@ const DonationEditForm = ({ donation, user }) => {
         </div>
 
         {/* Section: Editable Fields */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div className="bg-white p-2 md:p-6 rounded-2xl border border-gray-100 shadow-sm">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-5">Update Details</p>
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

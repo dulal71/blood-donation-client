@@ -26,7 +26,7 @@ const DashboardLayout =async ({ children }) => {
     
       <div className="flex  flex-col lg:flex-row min-h-screen">
             <DashboardSidebar user={user}></DashboardSidebar>
-           <div className="flex-1 p-5">{children}</div> 
+           <div className="flex-1 p-2 md:p-5">{children}</div> 
         </div>
     </div>
   );

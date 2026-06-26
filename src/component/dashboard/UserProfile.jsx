@@ -197,7 +197,7 @@ export default function UserProfile() {
           <p className="text-gray-600 font-medium mb-2">{formData.role || "Senior Strategy Consultant"}</p>
           <div className="flex gap-3 items-center">
             <Chip color={formData.status === 'active' ? 'success' : 'danger'} variant="flat" size="sm">{formData.status}</Chip>
-            <span className="text-sm text-gray-500">Joined Oct 2021</span>
+
           </div>
         </div>
       </div>

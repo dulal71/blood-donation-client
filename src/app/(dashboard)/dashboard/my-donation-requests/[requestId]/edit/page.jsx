@@ -7,7 +7,7 @@ const EditDonation = async ({ params }) => {
   const donation = await getDonationsById(requestId);
 const user = await getSession()
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto p-x2 md:px-4 py-8">
       
       {/* Title */}
       <div className="mb-8">

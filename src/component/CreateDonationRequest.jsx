@@ -224,9 +224,9 @@ return (
         </div>
       </div>
     ) : (
-      <div className="max-w-3xl mx-auto py-10 px-4 space-y-8">
+      <div className="max-w-7xl mx-auto py-10 px-2 md:px-4 space-y-8">
         {/* Title Section */}
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
+        <div className="bg-white p-2 md:p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-5">
           <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
             <FaHandHoldingMedical size={24} />
           </div>
@@ -238,7 +238,7 @@ return (
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Requester Information */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <div className="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Requester Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <ReadOnlyField label="Your Name" value={user?.name ?? "—"} icon={FaUser} />
@@ -247,7 +247,7 @@ return (
           </div>
 
           {/* Recipient Information */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <div className="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Recipient Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FormInput label="Recipient Name" name="recipientName" value={form.recipientName} onChange={handleChange} icon={FaUser} required />
@@ -258,7 +258,7 @@ return (
           </div>
 
           {/* Hospital & Location */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <div className="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Hospital & Location</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FormInput label="Hospital Name" name="hospitalName" value={form.hospitalName} onChange={handleChange} icon={FaHospital} required />
@@ -267,7 +267,7 @@ return (
           </div>
 
           {/* Donation Schedule */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <div className="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Donation Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
               <FormInput label="Donation Date" name="donationDate" value={form.donationDate} onChange={handleChange} type="date" icon={FaCalendarAlt} required />
