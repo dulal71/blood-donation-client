@@ -8,7 +8,7 @@ import Logo from '../Logo';
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-gray-800 py-12 border-t border-gray-200">
+    <footer className="bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-300 py-12 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
           
@@ -17,18 +17,18 @@ const Footer = () => {
             <div className='mb-2'>
                 <Logo></Logo>
             </div>
-            <p className="text-gray-600 mb-4 max-w-xs">
+            <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-xs">
               Start your journey to save lives. Join our community of donors and make a difference.
             </p>
             <div className="flex gap-4 text-xl">
-              <a href="#" className="hover:text-red-600"><FaGithub /></a>
-              <a href="#" className="hover:text-red-600"><FaTwitter /></a>
-              <a href="#" className="hover:text-red-600"><FaEnvelope /></a>
+              <a href="#" className="hover:text-red-600 dark:hover:text-red-500"><FaGithub /></a>
+              <a href="#" className="hover:text-red-600 dark:hover:text-red-500"><FaTwitter /></a>
+              <a href="#" className="hover:text-red-600 dark:hover:text-red-500"><FaEnvelope /></a>
             </div>
             
-            <div className="mt-6 inline-block bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg">
-              <p className="text-xs text-gray-500">Monthly Top Donor</p>
-              <p className="font-bold text-sm">BLOOD HERO #1</p>
+            <div className="mt-6 inline-block bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 px-4 py-2 rounded-lg">
+              <p className="text-xs text-gray-500 dark:text-gray-400">Monthly Top Donor</p>
+              <p className="font-bold text-sm text-gray-900 dark:text-white">BLOOD HERO #1</p>
             </div>
           </div>
 
@@ -60,11 +60,11 @@ const Footer = () => {
             },
           ].map((section, idx) => (
             <div key={idx}>
-              <h3 className="font-bold mb-4 text-gray-900 text-sm">{section.title}</h3>
+              <h3 className="font-bold mb-4 text-gray-900 dark:text-white text-sm">{section.title}</h3>
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <a href="#" className="text-gray-600 hover:text-red-600 transition flex items-center gap-2">
+                    <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-500 transition flex items-center gap-2">
                       {link.icon} {link.name}
                     </a>
                   </li>
@@ -75,9 +75,9 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-100 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+        <div className="border-t border-gray-100 dark:border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 dark:text-gray-400">
           <p className="flex items-center gap-1">Made with <FaHeart className="text-red-500"/> by BloodLife Team | © 2026 All Rights Reserved.</p>
-          <button className="mt-4 md:mt-0 hover:text-black">
+          <button className="mt-4 md:mt-0 hover:text-black dark:hover:text-white">
             <FaMoon />
           </button>
         </div>

@@ -8,6 +8,7 @@ import Image from "next/image";
 import Logo from "./Logo";
 import { useSession } from "@/lib/auth-client";
 import LogoutButton from "./LogoutButton";
+import { ThemeSwitch } from "./ThemeSwitch";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -50,18 +51,20 @@ if(user){
   });
 }
   return (
-    <nav className={`sticky top-0 transition-all duration-300 z-50 border-b bg-white border-gray-100 px-4 md:px-[8%] flex items-center ${scrolled ? 'h-[60px] shadow-sm' : 'h-[75px]'}`}>
+    <nav className={`sticky top-0 transition-all duration-300 z-50 border-b bg-white dark:bg-black border-gray-100 dark:border-zinc-500/10 px-4 md:px-[8%] flex items-center ${scrolled ? 'h-[60px] shadow-sm' : 'h-[75px]'}`}>
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
         <Logo />
 
         {/*desktop link*/}
         <div className="hidden sm:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={`text-md font-medium transition-colors ${pathname === link.href ? "text-red-700 font-semibold" : "text-gray-700 hover:text-red-700"}`}>{link.name}</Link>
+            <Link key={link.href} href={link.href} className={`text-md font-medium transition-colors ${pathname === link.href ? "text-red-700 font-semibold" : "text-gray-700 dark:text-white hover:text-red-700"}`}>{link.name}</Link>
           ))}
         </div>
 
-    
+         <div>
+          <ThemeSwitch></ThemeSwitch>
+         </div>
         <div className="flex items-center gap-4">
           
         

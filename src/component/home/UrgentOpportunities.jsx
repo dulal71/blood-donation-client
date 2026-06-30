@@ -36,47 +36,48 @@ const opportunities = [
 
 export default function UrgentOpportunities() {
   return (
-    <section className="py-12 px-4 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-end mb-6">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Urgent  <span className="text-red-700">Bridges,</span> Opportunities</h2>
-            <p className="text-gray-500 text-sm">Real-time alerts for critical blood types in your area</p>
+    <section className="py-12 px-4 bg-gray-50 dark:bg-gray-950">
+  <div className="max-w-6xl mx-auto">
+    <div className="flex justify-between items-end mb-6">
+      <div>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+          Urgent <span className="text-red-700 dark:text-red-500">Bridges,</span> Opportunities
+        </h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">Real-time alerts for critical blood types in your area</p>
+      </div>
+      <button className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1 hover:underline">
+        View All Bridge Points <FaChevronRight size={12} />
+      </button>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {opportunities.map((opp, idx) => (
+        <div key={idx} className="bg-white dark:bg-gray-900 p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+          <div className="flex justify-between items-start mb-4">
+            <span className={`text-[10px] font-bold px-2 py-1 rounded ${opp.tagColor}`}>
+              {opp.tag}
+            </span>
+            <div className="w-6 h-6 bg-gray-100 dark:bg-gray-800 rounded-full" />
           </div>
-          <button className="text-sm font-medium text-gray-700 flex items-center gap-1 hover:underline">
-            View All Bridge Points <FaChevronRight size={12} />
+          
+          <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">{opp.title}</h3>
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <opp.icon size={14} />
+            <span>{opp.info}</span>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full mb-5">
+            <div className={`${opp.progressColor} h-1.5 rounded-full w-2/3`} />
+          </div>
+          
+          <button className={`w-full py-2 rounded-md font-semibold text-sm transition ${opp.buttonClass}`}>
+            {opp.buttonText}
           </button>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {opportunities.map((opp, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-              <div className="flex justify-between items-start mb-4">
-                <span className={`text-[10px] font-bold px-2 py-1 rounded ${opp.tagColor}`}>
-                  {opp.tag}
-                </span>
-                {/* Placeholder icon */}
-                <div className="w-6 h-6 bg-gray-100 rounded-full" />
-              </div>
-              
-              <h3 className="font-bold text-lg mb-2">{opp.title}</h3>
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                <opp.icon size={14} />
-                <span>{opp.info}</span>
-              </div>
-              
-              {/* Progress Bar */}
-              <div className="w-full bg-gray-100 h-1.5 rounded-full mb-5">
-                <div className={`${opp.progressColor} h-1.5 rounded-full w-2/3`} />
-              </div>
-              
-              <button className={`py-2 rounded-md font-semibold text-sm transition ${opp.buttonClass}`}>
-                {opp.buttonText}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+      ))}
+    </div>
+  </div>
+</section>
   );
 }

@@ -1,6 +1,7 @@
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import NextThemeProvider from "@/provider/NextThemeProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,8 +26,12 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${poppins.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        <NextThemeProvider>
+         {children}
+        </NextThemeProvider>
         <Toaster richColors position="top-center" />
       </body>
     </html>

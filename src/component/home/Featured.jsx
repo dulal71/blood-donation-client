@@ -26,31 +26,37 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="bg-gray-50 py-20 px-4">
-      <div className="max-w-6xl mx-auto text-center">
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Building <span className="text-red-700">Bridges,</span> Saving Lives</h2>
-        <p className="text-gray-500 max-w-2xl mx-auto mb-16">
-          Blood Bridge is a 100% free platform dedicated to making blood donation accessible, safe, and community-focused.
-        </p>
+   <section className="bg-white dark:bg-gray-950 py-20 px-4 transition-colors duration-300">
+  <div className="max-w-6xl mx-auto text-center">
+    {/* Title */}
+    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+      Building <span className="text-red-700 dark:text-red-500">Bridges,</span> Saving Lives
+    </h2>
+    <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-16">
+      Blood Bridge is a 100% free platform dedicated to making blood donation accessible, safe, and community-focused.
+    </p>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <div key={index} className="flex flex-col items-center text-center">
-              {/* Icon Container */}
-              <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-6 border border-gray-100">
-                {feature.icon}
-              </div>
-              {/* Text */}
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed max-w-[250px]">
-                {feature.description}
-              </p>
+    {/* Features Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {features.map((feature, index) => (
+        <div key={index} className="flex flex-col items-center text-center">
+          {/* Icon Container */}
+          <div className="w-16 h-16 bg-white dark:bg-gray-900 rounded-full shadow-sm flex items-center justify-center mb-6 border border-gray-100 dark:border-gray-800">
+            <div className="text-gray-900 dark:text-red-400">
+              {feature.icon}
             </div>
-          ))}
+          </div>
+          {/* Text */}
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            {feature.title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[250px]">
+            {feature.description}
+          </p>
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
+  </div>
+</section>
   );
 }
