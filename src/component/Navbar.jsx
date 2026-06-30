@@ -121,7 +121,7 @@ if(user){
           </div>
 
           {/* Mobile menu button */}
-          <button onClick={() => setMobileMenuOpen(true)} className="sm:hidden text-gray-700 text-2xl p-1 focus:outline-none active:scale-95 transition-transform">
+          <button onClick={() => setMobileMenuOpen(true)} className="sm:hidden text-gray-700   text-2xl p-1 focus:outline-none active:scale-95 transition-transform">
             <FaBars />
           </button>
         </div>
@@ -129,18 +129,18 @@ if(user){
 
     {/* mobile screen overly */}
       <div className={`fixed inset-0 bg-slate-900/40 backdrop-blur-md z-50 transition-all duration-300 sm:hidden ${mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}>
-        <div className={`absolute top-0 right-0 w-[75%] h-full bg-white shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
+        <div className={`absolute top-0 right-0 w-[75%] h-full bg-white dark:bg-gray-900 shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
           
           <div>
             <div className="flex items-center justify-between pb-6 border-b border-gray-100">
               <Logo />
-              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-700 text-2xl"><FaTimes /></button>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-700 dark:text-white text-2xl"><FaTimes /></button>
             </div>
 
             {/* Links */}
             <div className="flex flex-col gap-4 mt-8">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-lg font-semibold py-2 px-3 rounded-xl transition-all ${pathname === link.href ? "bg-red-50 text-red-700" : "text-gray-800 hover:bg-gray-50"}`}>{link.name}</Link>
+                <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-lg font-semibold py-2 px-3 rounded-xl transition-all ${pathname === link.href ? "bg-red-50 text-red-700" : "text-gray-800 dark:text-white hover:bg-gray-50"}`}>{link.name}</Link>
               ))}
             </div>
           </div>
@@ -158,7 +158,7 @@ if(user){
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="bg-slate-900 text-white text-xs font-semibold py-3 rounded-xl text-center"><FaThLarge className="inline mr-1" /> Dash</Link>
-                  <Link href={`/dashboard/profile`} onClick={() => setMobileMenuOpen(false)} className="border border-gray-200 text-gray-700 text-xs font-semibold py-3 rounded-xl text-center"><FaUser className="inline mr-1" /> Profile</Link>
+                  <Link href={`/dashboard/profile`} onClick={() => setMobileMenuOpen(false)} className="border border-gray-200 text-gray-700 dark:text-white text-xs font-semibold py-3 rounded-xl text-center"><FaUser className="inline mr-1" /> Profile</Link>
                 </div>
               </div>
             ) : (
