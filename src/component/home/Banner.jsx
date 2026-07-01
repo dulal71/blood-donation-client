@@ -10,7 +10,6 @@ import { PiHandCoinsFill } from 'react-icons/pi';
 const DonationDashboard = async () => {
   const {result:donations, totalData = 0 } = await getDonations();
   const { totalAmount } = await fundingData();
-  console.log(donations);
 
   const stats = [
     { title: "Active Donors", icon:FaHeart, value: "12,450", description: "Community members this month" },
@@ -74,8 +73,11 @@ const DonationDashboard = async () => {
           <h3 className="text-gray-500 font-medium mb-1 uppercase text-xs tracking-widest">
             {stat.title}
           </h3>
-          <Icon size={32} className="text-red-500 mb-2" />
+          <div className='flex items-center  gap-4'>
+            <Icon size={30} color='red' />
           <p className="text-4xl font-bold mb-2 text-gray-900">{stat.value}</p>
+          </div>
+          
           <p className="text-sm text-gray-400">{stat.description}</p>
         </div>
       </div>
