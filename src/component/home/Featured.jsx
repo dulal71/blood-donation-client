@@ -1,62 +1,75 @@
+'use client'
 import React from "react";
 import { FaShieldAlt, FaHandHoldingHeart, FaDonate, FaRobot } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const features = [
   {
-    icon: <FaShieldAlt className="text-blue-600" size={24} />,
+    icon: FaShieldAlt,
     title: "Professional Standards",
-    description: "We partner with FDA-cleared clinical centers to ensure your safety and comfort.",
+    description: "Partnering with verified clinical centers to ensure your safety and comfort.",
   },
   {
-    icon: <FaHandHoldingHeart className="text-blue-600" size={24} />,
+    icon: FaHandHoldingHeart,
     title: "Donor to Patient",
-    description: "Your donation forms a direct bridge to a neighbor in need within your local community.",
+    description: "Your donation forms a direct, impactful bridge to neighbors in your local community.",
   },
   {
-    icon: <FaDonate className="text-blue-600" size={24} />,
+    icon: FaDonate,
     title: "Always Free",
     description: "A non-profit mission to eliminate barriers and connect donors to recipients without cost.",
   },
   {
-    icon: <FaRobot className="text-blue-600" size={24} />,
+    icon: FaRobot,
     title: "Smart Matching",
-    description: "Our intelligent platform directs you to the centers where your specific blood type is most needed.",
+    description: "Intelligent platform routing that directs you where your specific blood type is most needed.",
   },
 ];
 
 export default function Features() {
   return (
-   <section className="bg-white dark:bg-gray-950 py-20 px-4 transition-colors duration-300">
-  <div className="max-w-6xl mx-auto text-center">
-    {/* Title */}
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-      Building <span className="text-red-700 dark:text-red-500">Bridges,</span> Saving Lives
-    </h2>
-    <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-16">
-      Blood Bridge is a 100% free platform dedicated to making blood donation accessible, safe, and community-focused.
-    </p>
-
-    {/* Features Grid */}
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      {features.map((feature, index) => (
-        <div key={index} className="flex flex-col items-center text-center">
-          {/* Icon Container */}
-          <div className="w-16 h-16 bg-white dark:bg-gray-900 rounded-full shadow-sm flex items-center justify-center mb-6 border border-gray-100 dark:border-gray-800">
-            <div className="text-gray-900 dark:text-red-400">
-              {feature.icon}
-            </div>
-          </div>
-          {/* Text */}
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-            {feature.title}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[250px]">
-            {feature.description}
-          </p>
+    <section className="bg-white dark:bg-gray-950 py-24 px-6 transition-colors duration-300">
+      <div className="max-w-5xl mx-auto">
+        {/* Title Section */}
+        <div className="text-center mb-20">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">
+            Building <span className="text-red-600">Bridges,</span> Saving Lives
+          </h2>
+          <div className="h-1 w-20 bg-red-600 mx-auto rounded-full"></div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+
+        {/* Feature List (Clean Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-start gap-5"
+              >
+                {/* Icon (No Box) */}
+                <div className="flex-shrink-0 pt-1">
+                  <Icon className="text-red-600 dark:text-red-500" size={32} />
+                </div>
+                
+                {/* Text Content */}
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-light">
+                    {feature.description}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }

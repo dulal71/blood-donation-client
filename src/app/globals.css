@@ -105,6 +105,9 @@ h1, h2, h3 {
   padding: 20px;
   text-align: center;
 }
+.dark .bg {
+  background: rgba(30, 41, 59, 0.95); 
+}
 
 .blob {
   position: absolute;

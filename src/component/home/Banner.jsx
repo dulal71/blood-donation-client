@@ -7,8 +7,8 @@ import { MdBloodtype } from 'react-icons/md';
 import { PiHandCoinsFill } from 'react-icons/pi';
 
 const DonationDashboard = async () => {
-  const {result:donations, totalData = 0 } = await getDonations();
-  const { totalAmount } = await fundingData();
+  const { totalData = 0 } = await getDonations();
+  const { totalAmount = 0 } = await fundingData();
 
   const stats = [
     { title: "Active Donors", icon:FaHeart, value: "12,450", description: "Community members this month" },
@@ -68,15 +68,15 @@ const DonationDashboard = async () => {
       <div key={index} className="card">
         <div className="blob"></div>
         <div className="bg">
-          <h3 className="text-gray-500 font-medium mb-1 uppercase text-xs tracking-widest">
+          <h3 className="text-gray-500 dark:text-gray-300 font-medium mb-1 uppercase text-xs tracking-widest">
             {stat.title}
           </h3>
           <div className='flex items-center  gap-4'>
             <Icon size={30} color='red' />
-          <p className="text-4xl font-bold mb-2 text-gray-900">{stat.value}</p>
+          <p className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">{stat.value}</p>
           </div>
           
-          <p className="text-sm text-gray-400">{stat.description}</p>
+          <p className="text-sm text-gray-400 dark:text-gray-300">{stat.description}</p>
         </div>
       </div>
     );
