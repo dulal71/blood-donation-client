@@ -21,9 +21,7 @@ const DonationRequestContainer = ({donations,totalData}) => {
             donations.map(donation => <DonationCard key={donation._id}  request={donation}></DonationCard>)
         }
         </div>
-       <div className='my-3'>
-        <PaginationWithEllipsis totalData={totalData} donations={donations}></PaginationWithEllipsis>
-       </div>  
+         
     </div>  
 :<EmptyMessage></EmptyMessage> 
         }

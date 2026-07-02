@@ -1,5 +1,6 @@
 
 import DonationRequestContainer from '@/component/DonationRequestContainer';
+import { PaginationWithEllipsis } from '@/component/Pagination';
 
 
 import { getDonations } from '@/lib/api/dontion';
@@ -29,7 +30,9 @@ console.log(donations);
      <div>
       <DonationRequestContainer donations={donations} totalData={totalData}></DonationRequestContainer>
      </div>
-      
+      <div className='my-3'>
+        <PaginationWithEllipsis totalData={totalData} donations={donations}></PaginationWithEllipsis>
+       </div>
         </div>
     );
 };
