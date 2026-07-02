@@ -51,7 +51,11 @@ if(user){
   });
 }
   return (
-    <nav className={`sticky top-0 transition-all duration-300 z-50 border-b bg-white dark:bg-black border-gray-100 dark:border-zinc-500/10 px-4 md:px-[8%] flex items-center ${scrolled ? 'h-[60px] shadow-sm' : 'h-[75px]'}`}>
+    <nav className={`sticky top-0 transition-all duration-300 z-50 border-b px-4 md:px-[8%] flex items-center
+   bg-white/80 backdrop-blur-md border-gray-200
+  dark:bg-slate-950/80 dark:backdrop-blur-md dark:border-zinc-800
+    ${scrolled ? 'h-[60px] shadow-sm dark:shadow-slate-900/50' : 'h-[75px]'}
+  `}>
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
         <Logo />
 

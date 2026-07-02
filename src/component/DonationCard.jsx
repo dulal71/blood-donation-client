@@ -51,11 +51,11 @@ export default function DonationCard({ request }) {
 
         {/* Button */}
         <Link
-          href={`/dashboard/${request._id}`}
-          className="relative block w-full py-3.5 text-center rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold tracking-wide transition-all duration-300 hover:bg-rose-600 dark:hover:bg-rose-500 hover:text-white active:scale-[0.97]"
-        >
-          View Full Request
-        </Link>
+  href={`/dashboard/${request._id}`}
+  className="relative block w-full py-2.5 text-center rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold tracking-wide transition-all duration-300 hover:bg-rose-600 dark:hover:bg-rose-700 hover:text-white active:scale-[0.98]"
+>
+  View Full Request
+</Link>
       </div>
     </div>
   );
