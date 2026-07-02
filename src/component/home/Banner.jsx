@@ -26,11 +26,11 @@ const DonationDashboard = async () => {
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-white">
+      <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-start text-white">
         
         {/* Banner Content */}
         {/* Left Section */}
-           <div className="max-w-3xl text-center">
+           <div className="max-w-3xl text-left">
           
           <span className="inline-block bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-6 uppercase tracking-wider">
             When Every Second Matters
@@ -44,7 +44,7 @@ const DonationDashboard = async () => {
             Blood Bridge connects generous donors with those in critical need. As a local, community-driven platform, we ensure every drop becomes a lifeline for your neighbors.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-4 mb-20">
+          <div className="flex flex-wrap  gap-4 mb-20">
             <Link
               href={'/registration'}
               className="bg-red-600 hover:bg-red-700 transition-all text-white font-semibold py-3 px-8 rounded-lg"

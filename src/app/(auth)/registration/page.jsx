@@ -1,5 +1,6 @@
-import RegistrationForm from '@/component/RegistrationFrom';
+
 import React, { Suspense } from 'react';
+import RegistrationForm from './RegistrationForm';
 
 const RegistrationPage = () => {
     return (
