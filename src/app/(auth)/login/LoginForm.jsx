@@ -2,6 +2,7 @@
 
 import TextInput from '@/component/auth/TextInput';
 import validateLogin from '@/component/auth/validateLogin';
+import useUserLogin from '@/lib/authService/userLogin';
 import userLogin from '@/lib/authService/userLogin';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -11,26 +12,29 @@ import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 
 const LoginForm = () => {
-    const {Login,isLoading}=userLogin()
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
-
-  const [errors, setErrors] = useState({});
-
+const [errors, setErrors] = useState({});
 const searchParams=useSearchParams()
 const redirectTo=searchParams.get('redirect') || "/"
- 
+   const {Login,isLoading}=useUserLogin()
 const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ 
+        ...prev, 
+        [name]: value,
+    }));
+    setErrors(prev => ({
+   ...prev,
+   [name]: ""
+}))
   };
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-    const NewErrors= validateLogin({
-     formData
-    })
+    const NewErrors= validateLogin(formData)
     if (Object.keys(NewErrors).length > 0) {
-      setErrors(errors);
+      setErrors(NewErrors);
       return;
     }
     try{

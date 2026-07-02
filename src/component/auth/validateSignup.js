@@ -1,5 +1,6 @@
 
  const validateSignup=({ formData, logoUrl})=>{
+  console.log(logoUrl );
 const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Full name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";

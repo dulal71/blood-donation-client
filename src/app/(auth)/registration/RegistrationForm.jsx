@@ -12,9 +12,10 @@ import TextInput from "@/component/auth/TextInput";
 import validateSignup from "@/component/auth/validateSignup";
 import userSignup from "@/lib/authService/userSignup";
 import { districtsData, upazilasData } from "@/data/geoData";
+import useUserSignup from "@/lib/authService/userSignup";
 
 export default function RegistrationForm() {
-  const {signup , isLoading}=userSignup()
+  const {signup , isLoading}=useUserSignup()
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || "/";
 

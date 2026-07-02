@@ -1,5 +1,6 @@
  
- const validateLogin=( formData)=>{
+ const validateLogin=(formData)=>{
+    
 const newErrors = {};
 
     if (!formData.email.trim()) newErrors.email = "Email is required";

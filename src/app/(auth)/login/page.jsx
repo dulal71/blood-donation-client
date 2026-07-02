@@ -1,6 +1,6 @@
-
-import React, { Suspense } from 'react';
 import LoginForm from './LoginForm';
+import React, { Suspense } from 'react';
+
 
 
 const LoginPage = () => {
