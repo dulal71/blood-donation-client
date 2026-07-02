@@ -1,5 +1,7 @@
-import LoginForm from '@/component/LoginForm';
+
 import React, { Suspense } from 'react';
+import LoginForm from './LoginForm';
+
 
 const LoginPage = () => {
     return (
