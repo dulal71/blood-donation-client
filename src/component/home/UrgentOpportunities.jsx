@@ -36,7 +36,7 @@ const opportunities = [
 
 export default function UrgentOpportunities() {
   return (
-    <section className="py-12 px-4 bg-gray-50 dark:bg-gray-950">
+    <section className="py-12 px-4 bg-gray-50 dark:bg-gray-950 mt-100 md:mt-30">
   <div className="max-w-6xl mx-auto">
     <div className="flex justify-between items-end mb-6">
       <div>

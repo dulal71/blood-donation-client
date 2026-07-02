@@ -2,9 +2,8 @@ import { getDonations } from '@/lib/api/dontion';
 import { fundingData } from '@/lib/api/fundingData';
 import Link from 'next/link';
 import React from 'react';
-import { FaHeart, FaLocationDot } from 'react-icons/fa6';
-import { IoMdTimer } from 'react-icons/io';
-import { MdBloodtype, MdOutlineEmergency } from 'react-icons/md';
+import { FaHeart } from 'react-icons/fa6';
+import { MdBloodtype } from 'react-icons/md';
 import { PiHandCoinsFill } from 'react-icons/pi';
 
 const DonationDashboard = async () => {
@@ -45,7 +44,7 @@ const DonationDashboard = async () => {
             Blood Bridge connects generous donors with those in critical need. As a local, community-driven platform, we ensure every drop becomes a lifeline for your neighbors.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4 mb-20">
             <Link
               href={'/registration'}
               className="bg-red-600 hover:bg-red-700 transition-all text-white font-semibold py-3 px-8 rounded-lg"
@@ -60,10 +59,9 @@ const DonationDashboard = async () => {
             </Link>
           </div>
         </div>
-
-         {/* Stats Cards Section - Positioned relative to banner */}
-         {/* Stats Cards Section - Positioned relative to banner */}
-      <div className=" grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full">
+ {/* Stats Cards Section - Positioned relative to banner */}
+         <div className="absolute left-0 right-0 -bottom-[480px] md:-bottom-40 px-6 z-20">
+      <div className=" grid grid-cols-1 md:grid-cols-3 gap-6  w-full">
   {stats.map((stat, index) => {
     const Icon = stat.icon;
     return (
@@ -83,6 +81,7 @@ const DonationDashboard = async () => {
       </div>
     );
   })}
+</div>
 </div>
       </div>
     </section>
